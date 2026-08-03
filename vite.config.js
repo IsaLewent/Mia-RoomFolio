@@ -4,6 +4,11 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   // index.html'in src klasörü içinde olduğunu belirtiyoruz
+
+  build: {
+    outDir: '../dist', // Çıktının ana dizinde dist olarak oluşmasını garanti eder
+    emptyOutDir: true,
+  },
   root: "src/",
 
   // Statik dosyaların (görsel, font vb.) en dıştaki 'static' klasöründe olduğunu belirtiyoruz
