@@ -81,9 +81,6 @@ Object.entries(textures).forEach(([key, paths]) => {
     morningTexture.colorSpace = THREE.SRGBColorSpace;
     nightTexture.colorSpace = THREE.SRGBColorSpace;
 
-    morningTexture.encoding = THREE.sRGBEncoding;
-    nightTexture.encoding = THREE.sRGBEncoding;
-
     loaderTextures.morning[key] = morningTexture;
     loaderTextures.night[key] = nightTexture;
 
