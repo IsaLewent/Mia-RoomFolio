@@ -1,25 +1,46 @@
-//? Import Three.js basics
+//! Import Three.js basics
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { OrbitControls } from "./utils/OrbitControls.js";
 import GUI from "lil-gui";
 
-//? Import Three.js Loaders
+//! Import Stats.js
+import Stats from "three/examples/jsm/libs/stats.module.js";
+
+//! Import Three.js Loaders
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
-//? Shaders
+//! Shaders
 import vertexShader from "./shaders/holographic/vertexShader.glsl";
 import fragmentShader from "./shaders/holographic/fragmentShader.glsl";
 import gsap from "gsap";
 
+//! Textures
+import textures from "./utils/data.js";
+
+/*
+ * Fps Stats 
+*/
+const stats = Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
+
+stats.dom.style.position = 'fixed';
+stats.dom.style.top = '0px';
+stats.dom.style.left = 'auto'; // Sol bağını kopar
+stats.dom.style.right = '0px';
+
 /**
  ** Loaders
  */
+//? Loading Manager
+const loadingManager = new THREE.LoadingManager();
+
 //? Texture Loader
-const textureLoader = new THREE.TextureLoader();
+const textureLoader = new THREE.TextureLoader(loadingManager);
 
 //? Draco Loader
-const dracoLoader = new DRACOLoader();
+const dracoLoader = new DRACOLoader(loadingManager);
 dracoLoader.setDecoderPath("/draco/");
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
@@ -35,34 +56,6 @@ window.addEventListener("mousemove", (e) => {
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 });
-
-//? Textures
-const textures = {
-    first: {
-        morning: "./textures/Morning/Bake1.webp",
-        night: "./textures/Night/Bake1Night.webp"
-    },
-    second: {
-        morning: "./textures/Morning/Bake2.webp",
-        night: "./textures/Night/Bake2Night.webp"
-    },
-    third: {
-        morning: "./textures/Morning/Bake3.webp",
-        night: "./textures/Night/Bake3Night.webp"
-    },
-    fourth: {
-        morning: "./textures/Morning/Bake4.webp",
-        night: "./textures/Night/Bake4Night.webp"
-    },
-    fifth: {
-        morning: "./textures/Morning/Bake5.webp",
-        night: "./textures/Night/Bake5Night.webp"
-    },
-    envmap: {
-        morning: "./textures/Morning/EnvMapMMorning.png",
-        night: "./textures/Night/EnvMapNight.png",
-    },
-}
 
 //? Loader Textures
 const loaderTextures = {
@@ -88,6 +81,20 @@ Object.entries(textures).forEach(([key, paths]) => {
 
 //? Arrays and Objects
 let jettKnife = [];
+let junkFood2 = [];
+let juice2 = [];
+let pringles2 = [];
+let pokeball2 = [];
+let switchConsole = [];
+let jettPhoto = [];
+let portfolio = [];
+let toothlesPhoto = [];
+let twitchPhoto = [];
+let plant = [];
+let pencil = [];
+let tinyCuteCat = [];
+let bigCuteCat = [];
+let rubikCube = [];
 let bigFanBlades = [];
 let smallFanBlades = [];
 let hoverableObjects = [];
@@ -95,7 +102,7 @@ let keyboardKeys = [];
 let chair = null;
 
 //? Debug GUI
-const gui = new GUI();
+// const gui = new GUI();
 
 //? Canvas
 const canvas = document.querySelector("#experience canvas.webgl");
@@ -123,21 +130,27 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000,
 );
-camera.position.set(-2, 2, 0)
+camera.position.set(-1.9377456896005003, 2.0288856500779326, 2.1705150062941243);
+// camera.position.set(-2, 2, 0)
 // camera.position.set(-2.0936600303324573, 2.5216470408974607, 2.114066167250461);
 // camera.rotation.set(-0.7686747537784157, Math.PI / 2, -0.514317856919106);
 // scene.add(camera);
 
 //? Setup The Controls
 const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.zoomSpeed = 0.4;
+
 controls.minPolarAngle = -Math.PI / 2;
 controls.maxPolarAngle = Math.PI / 2;
 
-controls.minDistance = 1.2;
-controls.maxDistance = 3.2;
+controls.minAzimuthAngle = -Math.PI / 2;
+controls.maxAzimuthAngle = 0;
 
-controls.target.set(-0.001, 1, 0.001);
-controls.enableDamping = true;
+controls.minDistance = 1;
+controls.maxDistance = 4;
+
+controls.target.set(-0.09215264961419832, 0.57583249775367, 0.23402887043094034);
 
 /*
 * Materials  
@@ -155,9 +168,9 @@ const hologarphicMaterial = new THREE.ShaderMaterial({
         uColor: new THREE.Uniform(new THREE.Color("#2a3cdd")),
     },
 })
-gui.addColor(hologarphicMaterial.uniforms.uColor, "value").name("Holographic Color").onChange((value) => {
-    hologarphicMaterial.uniforms.uColor.value.set(value);
-});
+// gui.addColor(hologarphicMaterial.uniforms.uColor, "value").name("Holographic Color").onChange((value) => {
+//     hologarphicMaterial.uniforms.uColor.value.set(value);
+// });
 
 /*
 * Monitors Materials 
@@ -203,6 +216,20 @@ const pcGlassMaterial = new THREE.MeshPhysicalMaterial({
     // transmission: 1,  <-- BU SATIRI TAMAMEN SİLİYORUZ
     side: THREE.FrontSide
 });
+/*
+* Animation Functions 
+*/
+// //! Keyboard Keys Blup Sound (Do it after Loading Page is ready)
+// const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
+// blupSound.volume = 0.1;
+
+// function playBlupSound() {
+//     const soundInstance = blupSound.cloneNode(); // Create a new instance of the sound
+//     soundInstance.volume = 0.1;
+//     blupSound.play().catch((error) => {
+//         console.error("Error playing blup sound:", error);
+//     });
+// }
 
 //! Keyboard Keys Animation
 const keyboardKeyAnimation = (keyboardKeys) => {
@@ -228,11 +255,94 @@ const keyboardKeyAnimation = (keyboardKeys) => {
             });
     });
 }
+//! Landing Animation
+const landingAnimation = () => {
+    const t1 = gsap.timeline({
+        defaults: {
+            ease: "back.inOut(1.8)",
+            duration: 0.4,
+        },
+    });
+    t1.delay(0.15);
+    const t2 = gsap.timeline({
+        defaults: {
+            ease: "back.inOut(1.8)",
+            duration: 0.4,
+        },
+    });
+    t1.delay(0.15);
+
+    t1.to(rubikCube[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.1").to(junkFood2[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.15").to(juice2[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.20").to(pringles2[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.20").to(pokeball2[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.20").to(jettKnife[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.25").to(switchConsole[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.25").to(jettPhoto[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.25");
+
+
+    t2.to(bigCuteCat[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.1").to(tinyCuteCat[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.15").to(pencil[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.20").to(plant[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.20").to(twitchPhoto[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+    }, "-=0.20").to(toothlesPhoto[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+    }, "-=0.25").to(portfolio[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+    }, "-=0.25")
+}
+
 
 /**
  ** Load Model
  */
-gltfLoader.load("./models/TinyPurpleRoomWithoutMaterial.glb", (gltf) => {
+gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
     gltf.scene.traverse((child) => {
         if (child.isMesh) {
             const childName = child.name.toLowerCase(); // Convert the name to lowercase for case-insensitive comparison
@@ -260,10 +370,6 @@ gltfLoader.load("./models/TinyPurpleRoomWithoutMaterial.glb", (gltf) => {
             else if (childName.includes("pcglass")) {
                 child.material = pcGlassMaterial;
             }
-            //? Jett Knife
-            else if (childName.includes("knife")) {
-                jettKnife.push(child);
-            }
             //? Fan Blades
             else if (childName.includes("bigblade")) {
                 bigFanBlades.push(child);
@@ -275,7 +381,69 @@ gltfLoader.load("./models/TinyPurpleRoomWithoutMaterial.glb", (gltf) => {
             else if (childName.includes("chair")) {
                 chair = child;
             }
-
+            /* 
+            * Landing Animation Objects
+            */
+            else if (childName.includes("knife")) {
+                child.scale.set(0, 0, 0);
+                jettKnife.push(child);
+            }
+            else if (childName.includes("rubiccube")) {
+                child.scale.set(0, 0, 0);
+                rubikCube.push(child);
+            }
+            else if (childName.includes("junkfood2")) {
+                child.scale.set(0, 0, 0);
+                junkFood2.push(child);
+            }
+            else if (childName.includes("juice2")) {
+                child.scale.set(0, 0, 0);
+                juice2.push(child);
+            }
+            else if (childName.includes("pringles2")) {
+                child.scale.set(0, 0, 0);
+                pringles2.push(child);
+            }
+            else if (childName.includes("pokeball2")) {
+                child.scale.set(0, 0, 0);
+                pokeball2.push(child);
+            }
+            else if (childName.includes("switchconsole")) {
+                child.scale.set(0, 0, 0);
+                switchConsole.push(child);
+            }
+            else if (childName.includes("jettphoto")) {
+                child.scale.set(0, 0, 0);
+                jettPhoto.push(child);
+            }
+            else if (childName.includes("portfoliotext")) {
+                child.scale.set(0, 0, 0);
+                portfolio.push(child);
+            }
+            else if (childName.includes("toothlesphoto")) {
+                child.scale.set(0, 0, 0);
+                toothlesPhoto.push(child);
+            }
+            else if (childName.includes("twitchlogo")) {
+                child.scale.set(0, 0, 0);
+                twitchPhoto.push(child);
+            }
+            else if (childName.includes("plant")) {
+                child.scale.set(0, 0, 0);
+                plant.push(child);
+            }
+            else if (childName.includes("pencil")) {
+                child.scale.set(0, 0, 0);
+                pencil.push(child);
+            }
+            else if (childName.includes("tinycutecat")) {
+                child.scale.set(0, 0, 0);
+                tinyCuteCat.push(child);
+            }
+            else if (childName.includes("bigcutecat")) {
+                child.scale.set(0, 0, 0);
+                bigCuteCat.push(child);
+            }
             /*
              * Multiple Objects 
             */
@@ -290,7 +458,7 @@ gltfLoader.load("./models/TinyPurpleRoomWithoutMaterial.glb", (gltf) => {
             }
 
             //? Hoverable Objects
-            else if (childName.includes("raycaster") && !childName.includes("key")) {
+            if (childName.includes("raycaster")) {
                 hoverableObjects.push(child);
             }
 
@@ -324,7 +492,33 @@ gltfLoader.load("./models/TinyPurpleRoomWithoutMaterial.glb", (gltf) => {
 
     //! Call Animation for Keyboard Keys
     keyboardKeyAnimation(keyboardKeys);
+    landingAnimation();
 
+});
+
+//? Knife Click Event
+window.addEventListener("click", () => {
+    const intersects = raycaster.intersectObjects(jettKnife, false);
+
+    if (intersects.length > 0) {
+        const target = intersects[0].object;
+        console.log("Clicked on:", target.name);
+
+        if (target.name.toLowerCase().includes("knife")) {
+            //? Knife Click Animation
+            const knifeClickTimeline = gsap.timeline({
+                defaults: {
+                    ease: "power1.inOut",
+                    duration: 0.5,
+                    ease: "power1.inOut",
+                },
+            });
+
+            knifeClickTimeline.to(target.rotation, {
+                y: target.rotation.y + Math.PI * 2, // 360 derece döndür
+            })
+        }
+    }
 });
 
 //? Renderer
@@ -346,9 +540,13 @@ let currentHovered = null;
 
 //? Animate
 const tick = () => {
+
     //? Controls Update
     controls.dampingFactor = 0.01;
     controls.update();
+
+    //? Stats Update
+    stats.update();
 
     //? Time
     const elapsedTime = clock.getElapsedTime();
@@ -360,8 +558,8 @@ const tick = () => {
 
     //? Raycaster Update
     raycaster.setFromCamera(mouse, camera);
-
-    const intersects = raycaster.intersectObjects(hoverableObjects, false);
+    const allHoverableObjects = [...hoverableObjects, ...jettKnife];
+    const intersects = raycaster.intersectObjects(allHoverableObjects, false);
 
     if (intersects.length > 0) {
 
@@ -449,7 +647,6 @@ const tick = () => {
     renderer.render(scene, camera);
     window.requestAnimationFrame(tick);
 };
-
 tick();
 
 //! Resize
