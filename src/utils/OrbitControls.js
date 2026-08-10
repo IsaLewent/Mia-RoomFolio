@@ -56,7 +56,7 @@ const _EPS = 0.000001;
 
 
 //? Min and Max Pan
-const minPan = new Vector3(-1.3, 0.2, -1);
+const minPan = new Vector3(-1.3, 0.2, -1.3);
 const maxPan = new Vector3(0.8, 2, 1.3);
 
 /**

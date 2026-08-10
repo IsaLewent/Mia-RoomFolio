@@ -2,6 +2,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "./utils/OrbitControls.js";
 import GUI from "lil-gui";
+import gsap from "gsap";
 
 //! Import Stats.js
 import Stats from "three/examples/jsm/libs/stats.module.js";
@@ -11,9 +12,13 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 //! Shaders
-import vertexShader from "./shaders/holographic/vertexShader.glsl";
-import fragmentShader from "./shaders/holographic/fragmentShader.glsl";
-import gsap from "gsap";
+//? Holographic Shader
+import holographicVertexShader from "./shaders/holographic/vertexShader.glsl";
+import holographicFragmentShader from "./shaders/holographic/fragmentShader.glsl";
+
+//? Coffee Smoke Shader
+import coffeeSmokeVertexShader from "./shaders/coffeSmoke/vertex.glsl";
+import coffeeSmokeFragmentShader from "./shaders/coffeSmoke/fragment.glsl";
 
 //! Textures
 import textures from "./utils/data.js";
@@ -26,9 +31,15 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
 stats.dom.style.position = 'fixed';
-stats.dom.style.top = '0px';
+stats.dom.style.top = '50%';
 stats.dom.style.left = 'auto'; // Sol bağını kopar
 stats.dom.style.right = '0px';
+
+//? GUI
+// const gui = new GUI({
+//     width: 200,
+
+// });
 
 /**
  ** Loaders
@@ -84,7 +95,9 @@ let jettKnife = [];
 let junkFood2 = [];
 let juice2 = [];
 let pringles2 = [];
+let hologramBall = [];
 let pokeball2 = [];
+let pokeball1 = [];
 let switchConsole = [];
 let jettPhoto = [];
 let portfolio = [];
@@ -130,11 +143,8 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000,
 );
-camera.position.set(-1.9377456896005003, 2.0288856500779326, 2.1705150062941243);
-// camera.position.set(-2, 2, 0)
-// camera.position.set(-2.0936600303324573, 2.5216470408974607, 2.114066167250461);
-// camera.rotation.set(-0.7686747537784157, Math.PI / 2, -0.514317856919106);
-// scene.add(camera);
+camera.position.set(-1.6684164356179783, 1.8450633594387291, 2.494341334167269);
+scene.add(camera);
 
 //? Setup The Controls
 const controls = new OrbitControls(camera, canvas);
@@ -150,7 +160,12 @@ controls.maxAzimuthAngle = 0;
 controls.minDistance = 1;
 controls.maxDistance = 4;
 
-controls.target.set(-0.09215264961419832, 0.57583249775367, 0.23402887043094034);
+controls.target.set(-0.12779923809391466, 0.6983715139496336, 0.17216488665852941);
+
+//? Coffe Smoke Texture
+const coffeTexture = textureLoader.load("./textures/PerlinNoise/perlin.png");
+coffeTexture.wrapS = THREE.RepeatWrapping;
+coffeTexture.wrapT = THREE.RepeatWrapping;
 
 /*
 * Materials  
@@ -161,16 +176,13 @@ const hologarphicMaterial = new THREE.ShaderMaterial({
     depthWrite: false,
     blending: THREE.AdditiveBlending,
     side: THREE.DoubleSide,
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
+    vertexShader: holographicVertexShader,
+    fragmentShader: holographicFragmentShader,
     uniforms: {
         uTime: new THREE.Uniform(0),
-        uColor: new THREE.Uniform(new THREE.Color("#2a3cdd")),
+        uColor: new THREE.Uniform(new THREE.Color("#983e77")),
     },
 })
-// gui.addColor(hologarphicMaterial.uniforms.uColor, "value").name("Holographic Color").onChange((value) => {
-//     hologarphicMaterial.uniforms.uColor.value.set(value);
-// });
 
 /*
 * Monitors Materials 
@@ -203,9 +215,6 @@ secondVideoTexture.colorSpace = THREE.SRGBColorSpace;
 
 const secondMonitorMaterial = new THREE.MeshBasicMaterial({ map: secondVideoTexture });
 
-//? Coffee Smoke Material
-const coffeeSmokeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-
 //? PC Glass Material
 const pcGlassMaterial = new THREE.MeshPhysicalMaterial({
     color: 0x111111,     // Koyu renkli temperli cam efekti için (istediğin gibi açabilirsin)
@@ -216,10 +225,45 @@ const pcGlassMaterial = new THREE.MeshPhysicalMaterial({
     // transmission: 1,  <-- BU SATIRI TAMAMEN SİLİYORUZ
     side: THREE.FrontSide
 });
+
+//? Default Material 
+const material = new THREE.MeshStandardMaterial();
+
 /*
 * Animation Functions 
 */
-// //! Keyboard Keys Blup Sound (Do it after Loading Page is ready)
+//! Buttons Animations
+const themeToggleBtn = document.getElementById('themeToggle');
+const toggleHandle = document.getElementById('toggleHandle');
+const iconSun = document.getElementById('iconSun'); // Gündüz PNG/SVG'si
+const iconMoon = document.getElementById('iconMoon'); // Gece PNG/SVG'si
+
+let isNight = false;
+gsap.set(iconMoon, { opacity: 0, scale: 0.5, rotation: -90 });
+
+//! Toggle Animation Function
+const playToggleAnimation = () => {
+    isNight = !isNight; // Durumu tersine çevir
+
+    // Yaylanma hissi için GSAP Timeline oluştur
+    const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "back.out(1.2)" } });
+
+    if (isNight) {
+        // GECE Animasyonu
+        tl.to(toggleHandle, { x: 68, backgroundColor: "#3b82f6" }) // Yuvarlak sağa ve mavi
+            .to(themeToggleBtn, { backgroundColor: "#1e293b" }, "<") // Arkaplan koyu
+            .to(iconSun, { opacity: 0, scale: 0.5, rotation: 90, duration: 0.3 }, "<") // Güneş kaybolur
+            .to(iconMoon, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1"); // Ay ortaya çıkar
+    } else {
+        // GÜNDÜZ Animasyonu 
+        tl.to(toggleHandle, { x: 0, backgroundColor: "#E5B8D9" }) // Yuvarlak başa ve turuncu
+            .to(themeToggleBtn, { backgroundColor: "#ff0fff" }, "<") // Arkaplan açık gri
+            .to(iconMoon, { opacity: 0, scale: 0.5, rotation: -90, duration: 0.3 }, "<") // Ay kaybolur
+            .to(iconSun, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1"); // Güneş ortaya çıkar
+    }
+};
+
+//! Keyboard Keys Blup Sound (Do it after Loading Page is ready)
 // const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
 // blupSound.volume = 0.1;
 
@@ -260,89 +304,129 @@ const landingAnimation = () => {
     const t1 = gsap.timeline({
         defaults: {
             ease: "back.inOut(1.8)",
-            duration: 0.4,
+            duration: 0.6,
         },
     });
-    t1.delay(0.15);
+    t1.delay(.4);
     const t2 = gsap.timeline({
         defaults: {
             ease: "back.inOut(1.8)",
-            duration: 0.4,
+            duration: 0.6,
         },
     });
-    t1.delay(0.15);
+    t2.delay(.4);
 
     t1.to(rubikCube[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.1").to(junkFood2[0].scale, {
+    }, "-=0.4").to(junkFood2[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.15").to(juice2[0].scale, {
+    }, "-=0.4").to(juice2[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.20").to(pringles2[0].scale, {
+    }, "-=0.4").to(pringles2[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.20").to(pokeball2[0].scale, {
+    }, "-=0.4").to(hologramBall[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.20").to(jettKnife[0].scale, {
+    }, "-=0.4").to(pokeball2[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.25").to(switchConsole[0].scale, {
+    }, "-=0.4").to(pokeball1[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.25").to(jettPhoto[0].scale, {
+    }, "-=0.4").to(jettKnife[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.25");
+    }, "-=0.4").to(switchConsole[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.4").to(jettPhoto[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.4");
 
 
     t2.to(bigCuteCat[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.1").to(tinyCuteCat[0].scale, {
+    }, "-=0.4").to(tinyCuteCat[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.15").to(pencil[0].scale, {
+    }, "-=0.4").to(pencil[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.20").to(plant[0].scale, {
+    }, "-=0.4").to(plant[0].scale, {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.20").to(twitchPhoto[0].scale, {
+    }, "-=0.4").to(twitchPhoto[0].scale, {
         x: 1,
         y: 1,
         z: 1,
-    }, "-=0.20").to(toothlesPhoto[0].scale, {
+    }, "-=0.4").to(toothlesPhoto[0].scale, {
         x: 1,
         y: 1,
         z: 1,
-    }, "-=0.25").to(portfolio[0].scale, {
+    }, "-=0.4").to(portfolio[0].scale, {
         x: 1,
         y: 1,
         z: 1,
-    }, "-=0.25")
+    }, "-=0.4")
 }
 
+// // ? CoffeeSmoke Geometry and Material
+// const smokeGeo = new THREE.PlaneGeometry(2, 2, 16, 64);
+// smokeGeo.scale(0.08, 0.3, 1);
+
+// // HATALI SATIRI SİLİYORUZ:
+// // smokeGeo.translate(0.88, 1.05, 0.305) 
+
+// const positions = smokeGeo.attributes.position;
+// const allPositions = new Float32Array(positions.count);
+// smokeGeo.setAttribute('aPosition', new THREE.BufferAttribute(allPositions, 1));
+
+// // Material
+// const smokeMat = new THREE.ShaderMaterial({
+//     depthWrite: false,
+//     side: THREE.DoubleSide,
+//     transparent: true,
+//     fragmentShader: coffeeSmokeFragmentShader,
+//     vertexShader: coffeeSmokeVertexShader,
+//     uniforms: {
+//         uTexture: new THREE.Uniform(coffeTexture),
+//         uTime: new THREE.Uniform(0)
+//     },
+//     attributes: {
+//         aRandom: new THREE.BufferAttribute(allPositions, 1)
+//     }
+// });
+
+// const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
+
+// // DOĞRU YÖNTEM: Pozisyonu Mesh üzerinden veriyoruz
+// smokeMesh.position.set(0.88, 1.0, 0.309);
+// scene.add(smokeMesh);
 
 /**
  ** Load Model
  */
-gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
+gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
     gltf.scene.traverse((child) => {
         if (child.isMesh) {
             const childName = child.name.toLowerCase(); // Convert the name to lowercase for case-insensitive comparison
@@ -351,6 +435,8 @@ gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
             *Single Objects
             */
             if (childName.includes("hologrampokeball")) {
+                child.scale.set(0, 0, 0);
+                hologramBall.push(child);
                 child.material = hologarphicMaterial;
             }
             //? Monitors
@@ -362,10 +448,10 @@ gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
                     child.material = secondMonitorMaterial;
                 }
             }
-            //? Coffe Smoke
             else if (childName.includes("coffesmoke")) {
-                child.material = coffeeSmokeMaterial;
+                console.log(child.position.x, child.position.y, child.position.z);
             }
+
             //? PC Glass
             else if (childName.includes("pcglass")) {
                 child.material = pcGlassMaterial;
@@ -407,6 +493,10 @@ gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
             else if (childName.includes("pokeball2")) {
                 child.scale.set(0, 0, 0);
                 pokeball2.push(child);
+            }
+            else if (childName.includes("pokeball1")) {
+                child.scale.set(0, 0, 0);
+                pokeball1.push(child);
             }
             else if (childName.includes("switchconsole")) {
                 child.scale.set(0, 0, 0);
@@ -461,7 +551,6 @@ gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
             if (childName.includes("raycaster")) {
                 hoverableObjects.push(child);
             }
-
             //? Using Textures for Materials
             Object.keys(textures).forEach((key) => {
                 if (childName.includes(key)) {
@@ -469,7 +558,6 @@ gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
                         map: loaderTextures.morning[key],
                     });
                     child.material = material;
-
                 }
             });
         }
@@ -493,7 +581,6 @@ gltfLoader.load("./models/BakeFileV4.glb", (gltf) => {
     //! Call Animation for Keyboard Keys
     keyboardKeyAnimation(keyboardKeys);
     landingAnimation();
-
 });
 
 //? Knife Click Event
@@ -502,23 +589,45 @@ window.addEventListener("click", () => {
 
     if (intersects.length > 0) {
         const target = intersects[0].object;
-        console.log("Clicked on:", target.name);
-
         if (target.name.toLowerCase().includes("knife")) {
             //? Knife Click Animation
-            const knifeClickTimeline = gsap.timeline({
-                defaults: {
-                    ease: "power1.inOut",
-                    duration: 0.5,
-                    ease: "power1.inOut",
-                },
-            });
-
-            knifeClickTimeline.to(target.rotation, {
+            gsap.to(target.rotation, {
+                ease: "power2.inOut",
+                duration: 1.1,
                 y: target.rotation.y + Math.PI * 2, // 360 derece döndür
             })
         }
     }
+
+});
+themeToggleBtn.addEventListener('click', () => {
+    playToggleAnimation();
+    scene.traverse((child) => {
+        // Sadece 3D modelleri (Mesh) ve materyali olanları filtrele
+        if (child.isMesh && child.material) {
+            const childName = child.name.toLowerCase();
+            // Kendi texture objenin içindeki isimleri dön (bake1, bake2 vb.)
+            Object.keys(textures).forEach((key) => {
+
+                // Eğer objenin adı texture adıyla eşleşiyorsa
+                if (childName.includes(key)) {
+
+                    // isNight durumuna göre materyalin resmini değiştir
+                    if (isNight) {
+                        child.material.map = loaderTextures.night[key];
+                    } else {
+                        child.material.map = loaderTextures.morning[key];
+                    }
+
+                    // Ekran kartına (GPU) değişimi bildir
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+    });
+
+    hologarphicMaterial.uniforms.uColor.value.set(isNight ? "#0b2089" : "#983e77")
+
 });
 
 //? Renderer
@@ -540,7 +649,6 @@ let currentHovered = null;
 
 //? Animate
 const tick = () => {
-
     //? Controls Update
     controls.dampingFactor = 0.01;
     controls.update();
@@ -565,7 +673,6 @@ const tick = () => {
 
         const target = intersects[0].object; // For first object that the raycaster intersects
 
-        // Eğer fare YENİ bir objenin üzerine geldiyse (yani saniyede 60 kere tetiklenmesini engelliyoruz)
         if (currentHovered !== target) {
             if (currentHovered) {
                 gsap.to(currentHovered.scale, {
@@ -574,37 +681,27 @@ const tick = () => {
                     ease: "bounce.out"
                 });
             }
-
-            // b) Artık yeni odaklandığımız obje bu oldu
             currentHovered = target;
 
-            // c) Yeni objeyi Bounce animasyonu ile 1.3 katına çıkar
-            gsap.to(currentHovered.scale, {
-                x: 1.3, y: 1.3, z: 1.3,
-                duration: 0.5,
-                ease: "bounce.out"
-            });
-
-            // d) İmleci tıklanabilir (pointer) yap
+            if (!currentHovered.name.toLowerCase().includes("knife")) {
+                gsap.to(currentHovered.scale, {
+                    x: 1.3, y: 1.3, z: 1.3,
+                    duration: 0.5,
+                    ease: "bounce.out"
+                });
+            }
             canvas.style.cursor = 'pointer';
         }
     }
-    // 4. EĞER LAZER BOŞLUĞA ÇIKTIYSA (MOUSE OBJEDEN AYRILDIYSA)
     else {
-        // Eğer az önce bir objenin üzerindeysek ama şimdi boşluğa çıktıysak
         if (currentHovered) {
-
-            // O objeyi orijinal boyutuna (1) geri döndür
             gsap.to(currentHovered.scale, {
                 x: 1, y: 1, z: 1,
                 duration: 0.5,
                 ease: "bounce.out"
             });
 
-            // Kontrol değişkenini sıfırla ki hafızayı boşaltsın
             currentHovered = null;
-
-            // İmleci normal (default) ok haline geri çevir
             canvas.style.cursor = 'default';
         }
     }
@@ -640,8 +737,9 @@ const tick = () => {
             const chairSpeed = 0.3;
             chair.rotation.y = -Math.sin(elapsedTime * chairSpeed) * (Math.PI / 4); // Hafifçe sağa sola sallanma
         }
-
     }
+    //? SmokeMat Utime Update
+    // smokeMat.uniforms.uTime.value = elapsedTime;
 
     //? Render
     renderer.render(scene, camera);

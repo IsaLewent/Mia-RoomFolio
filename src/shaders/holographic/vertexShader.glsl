@@ -1,4 +1,4 @@
-#include "./Random2D/random2D.glsl"
+#include "../includes/random2D.glsl"
 
 varying vec3 vPosition;
 varying vec3 vNormal;

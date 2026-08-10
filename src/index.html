@@ -8,18 +8,52 @@
   </head>
 
   <body>
-    <!-- <div class="navbar">
+    <div class="hiPage"></div>
+
+    <div class="loadingPage">
+      <div class="loadingPageCenter">
+        <div class="loadingPageTop">
+          <p>Loading...</p>
+          <div class="loadingProgress"></div>
+          <button class="enter">Enter with Sound</button>
+        </div>
+
+        <button class="withoutEnter">Enter without Sound : (</button>
+      </div>
+    </div>
+
+    <div class="navbar">
       <div class="nav-Logo">
         <h1 class="logo-first">M</h1>
         <h1 class="logo-second">I</h1>
         <h1 class="logo-third">A</h1>
       </div>
-      <div class="navleft"></div>
-      <div class="navright">
+      <div class="navCenter">
         <button class="nav-button">About</button>
         <button class="nav-button">Contact</button>
       </div>
-    </div> -->
+      <div class="navright">
+        <button class="nav-button">Sound On</button>
+        <button id="themeToggle" class="theme-toggle">
+          <div id="toggleHandle" class="toggle-handle">
+            <!-- Gündüz PNG -->
+            <img
+              src="./icons/sunblack.png"
+              id="iconSun"
+              class="toggle-icon"
+              alt="Sun"
+            />
+            <!-- Gece PNG -->
+            <img
+              src="./icons/moon.png"
+              id="iconMoon"
+              class="toggle-icon"
+              alt="Moon"
+            />
+          </div>
+        </button>
+      </div>
+    </div>
 
     <div id="experience">
       <canvas class="webgl"></canvas>
@@ -27,4 +61,5 @@
   </body>
 
   <script type="module" src="script.js"></script>
+  <script type="module" src="buttons.js"></script>
 </html>

@@ -1,0 +1,37 @@
+#include "../includes/rotate2D.glsl"
+
+#define PI 3.1415926535897932384626433832795
+
+uniform float uTime;
+uniform sampler2D uTexture;
+
+varying vec2 vUv;
+
+void main () {
+    vec3 newPosition = position;
+
+    // Twist
+    float twistPerlin = texture(uTexture, vec2(
+        0.0,
+        uv.y * 0.2 - uTime * 0.005
+        )).r;
+    float angle = twistPerlin * 10.0;
+    newPosition.xz = rotate(newPosition.xz,angle);
+
+    // Wind 
+    vec2 windOffset = vec2(
+        texture(uTexture, vec2(0.25,uTime * 0.01)).r - 0.5,
+        texture(uTexture, vec2(0.75,uTime * 0.01)).r - 0.5
+    );
+    windOffset *= pow(uv.y, 2.0) * 10.0;
+    newPosition.xz += windOffset;
+
+    // Final Position
+    vec4 modelPosition = modelMatrix * vec4(newPosition,1.0);
+    vec4 viewPosition = viewMatrix * modelPosition;
+    vec4 projectedPosition = projectionMatrix * viewPosition;
+    gl_Position = projectedPosition;
+
+    // Varying UV
+    vUv = uv;
+}

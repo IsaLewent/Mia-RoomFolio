@@ -1,0 +1,6 @@
+@font-face {
+  font-family: "CuteGroovy"; /* Kod içinde kullanacağın kısa isim */
+  src: url("../public/fonts/CuteGroovy-9MG9K.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
