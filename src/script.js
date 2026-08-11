@@ -544,7 +544,6 @@ gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
 
     gltf.scene.scale.set(1, 1, 1);
     scene.add(gltf.scene);
-    console.log("Model loaded");
 
     //? Sort Keyboard Keys by Name
     keyboardKeys.sort((a, b) => {
@@ -748,8 +747,7 @@ const hiSectionAnimation = () => {
     const textTimeline = gsap.timeline({
         defaults: {
             ease: "back.out(1.5)",
-            zIndex: 2000,
-        }
+        },
     });
 
     textTimeline.set(".hi-section", { autoAlpha: 1 });
@@ -771,7 +769,7 @@ const hiSectionAnimation = () => {
         stagger: {
             each: 0.05,
             from: "end"
-        }
+        },
     }, "+=0.7").from(text2Split.chars, {
         y: -40,
         opacity: 0,

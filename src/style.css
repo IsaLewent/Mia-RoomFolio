@@ -14,8 +14,10 @@ body {
 }
 
 .loadingPage {
-  clip-path: circle(70.7% at 50% 50%);
-  position: relative;
+  clip-path: circle(100% at 50% 50%);
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,6 +31,18 @@ body {
   color: #fff;
 }
 
+.loadingPageCenter {
+  position: relative;
+  width: 100%;
+  margin-top: 100px;
+  height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .hi-section {
   position: absolute;
   letter-spacing: 3.5px;
@@ -38,17 +52,6 @@ body {
   color: #fff;
   padding: 8px 16px;
   visibility: hidden;
-}
-
-.loadingPageCenter {
-  width: 100%;
-  margin-top: 100px;
-  height: 16rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-  gap: 24px;
 }
 
 .loadingPageTop {
