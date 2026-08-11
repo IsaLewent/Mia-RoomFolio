@@ -781,12 +781,6 @@ manager.onLoad = () => {
                     Enter.remove();
                     loadingText.remove();
                     loadingPage.remove();
-
-                    withoutEnterButton = null;
-                    Enter = null;
-                    loadingText = null;
-                    loadingPage = null;
-
                 }
             });
         });
