@@ -731,19 +731,23 @@ const withoutEnterButton = document.getElementById("withoutEnterButton");
 const loadingPage = document.querySelector(".loadingPage");
 let isLoaded = false;
 
-//? Hi Section
-const text1 = document.getElementById("hiSection1");
-const text2 = document.getElementById("hiSection2");
-const text3 = document.getElementById("hiSection3");
-const text4 = document.getElementById("hiSection4");
 
-const text1Split = new SplitText(text1, { type: "chars" });
-const text2Split = new SplitText(text2, { type: "chars" });
-const text3Split = new SplitText(text3, { type: "chars" });
-const text4Split = new SplitText(text4, { type: "chars" });
 
 //! Hi Section Animation
 const hiSectionAnimation = () => {
+    //? Hi Section
+    const text1 = document.getElementById("hiSection1");
+    const text2 = document.getElementById("hiSection2");
+    const text3 = document.getElementById("hiSection3");
+    const text4 = document.getElementById("hiSection4");
+
+    const text1Split = new SplitText(text1, { type: "chars" });
+    const text2Split = new SplitText(text2, { type: "chars" });
+    const text3Split = new SplitText(text3, { type: "chars" });
+    const text4Split = new SplitText(text4, { type: "chars" });
+
+    gsap.killTweensOf([text1Split.chars, text2Split.chars, text3Split.chars, text4Split.chars]);
+
     const textTimeline = gsap.timeline({
         defaults: {
             ease: "back.out(1.5)",
@@ -862,9 +866,11 @@ manager.onLoad = () => {
         tl1.to(enterButton, {
             opacity: 1,
             scale: 1,
+            pointerEvents: "auto",
         }, "+<0.1").to(withoutEnterButton, {
             opacity: 1,
             scale: 1,
+            pointerEvents: "auto",
         }, "+<0.2");
 
         isLoaded = true;
@@ -891,9 +897,9 @@ manager.onLoad = () => {
                         hiSectionAnimation();
                     }
                 }, "<").to(loadingPage, {
-                    clipPath: "circle(0% at 50% 50%)",
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
                     ease: "power1.inOut",
-                    delay: 0.2,
+                    delay: 11,
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
                         keyboardKeyAnimation(keyboardKeys);
@@ -903,7 +909,7 @@ manager.onLoad = () => {
                         loadingText.remove();
                         loadingPage.remove();
                     }
-                }, "+=11.3");
+                });
             });
 
             withoutEnterButton.addEventListener("click", () => {
@@ -916,7 +922,6 @@ manager.onLoad = () => {
                 tl3.to(enterButton, {
                     opacity: 0,
                     scale: 0,
-
                 }, "<").to(withoutEnterButton, {
                     opacity: 0,
                     scale: 0,
@@ -927,7 +932,8 @@ manager.onLoad = () => {
                         hiSectionAnimation();
                     }
                 }, "<").to(loadingPage, {
-                    clipPath: "circle(0% at 50% 50%)",
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                    delay: 11,
                     ease: "power1.inOut",
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
@@ -938,7 +944,7 @@ manager.onLoad = () => {
                         loadingText.remove();
                         loadingPage.remove();
                     }
-                }, "+=11.3");
+                });
             });
         }
     })

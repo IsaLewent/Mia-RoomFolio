@@ -14,8 +14,8 @@ body {
 }
 
 .loadingPage {
-  --webkit-clip-path: circle(100% at 50% 50%);
-  clip-path: circle(100% at 50% 50%);
+  --webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   position: fixed;
   top: 0;
   left: 0;
@@ -80,6 +80,7 @@ body {
   font-size: 24px;
   cursor: pointer;
   opacity: 0;
+  pointer-events: none;
 }
 
 .withoutEnter {
@@ -93,6 +94,7 @@ body {
   font-size: 24px;
   cursor: pointer;
   opacity: 0;
+  pointer-events: none;
 }
 
 #experience {
