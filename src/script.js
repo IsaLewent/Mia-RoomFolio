@@ -115,35 +115,6 @@ let hoverableObjects = [];
 let keyboardKeys = [];
 let chair = null;
 
-//? DOM Elements
-const loadingText = document.getElementById("loadingText");
-const enterButton = document.getElementById("enterButton");
-const withoutEnterButton = document.getElementById("withoutEnterButton");
-const loadingPage = document.querySelector(".loadingPage");
-
-const tl = gsap.timeline({
-    defaults: {
-        ease: "power3.inOut",
-        duration: 0.25,
-    }
-});
-
-gsap.set(loadingText, { opacity: 0, scale: 0.5 });
-gsap.set(enterButton, { opacity: 0, scale: 0.5 });
-gsap.set(withoutEnterButton, { opacity: 0, scale: 0.5 });
-
-tl.to(loadingText, {
-    opacity: 1,
-    scale: 1,
-}, "<").to(enterButton, {
-    opacity: 1,
-    scale: 1,
-}, "+<0.1").to(withoutEnterButton, {
-    opacity: 1,
-    scale: 1,
-}, "+<0.2");
-
-
 //? Debug GUI
 // const gui = new GUI();
 
@@ -291,16 +262,17 @@ const playToggleAnimation = () => {
 };
 
 //! Keyboard Keys Blup Sound (Do it after Loading Page is ready)
-// const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
-// blupSound.volume = 0.1;
+const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
 
-// function playBlupSound() {
-//     const soundInstance = blupSound.cloneNode(); // Create a new instance of the sound
-//     soundInstance.volume = 0.1;
-//     blupSound.play().catch((error) => {
-//         console.error("Error playing blup sound:", error);
-//     });
-// }
+function playBlupSound() {
+    const soundClone = blupSound.cloneNode(true);
+
+    soundClone.volume = 0.01;
+
+    soundClone.play().catch((error) => {
+        console.error("Error playing blup sound:", error);
+    });
+}
 
 //! Keyboard Keys Animation
 const keyboardKeyAnimation = (keyboardKeys) => {
@@ -313,19 +285,24 @@ const keyboardKeyAnimation = (keyboardKeys) => {
             defaults: {
                 ease: "back.out(2.0)",
                 duration: 0.5,
-            },
+            }
+
         });
 
         tl.to(key.scale, {
             x: 1,
             y: 1,
-            z: 1
+            z: 1,
+            onStart: () => {
+                playBlupSound();
+            }
         }).to(key.position,
             {
                 y: key.userData.defaultYPosition.y + 0.01,
             });
     });
 }
+
 //! Landing Animation
 const landingAnimation = () => {
     const t1 = gsap.timeline({
@@ -743,6 +720,30 @@ const tick = () => {
 tick();
 
 //? Loading Manager Events
+//? DOM Elements
+const loadingText = document.getElementById("loadingText");
+const enterButton = document.getElementById("enterButton");
+const withoutEnterButton = document.getElementById("withoutEnterButton");
+const loadingPage = document.querySelector(".loadingPage");
+
+//! Loading Page Animation
+const tl = gsap.timeline({
+    defaults: {
+        ease: "power3.inOut",
+        duration: 0.25,
+    }
+});
+gsap.set(loadingText, { opacity: 0, scale: 0.5 });
+gsap.set(enterButton, { opacity: 0, scale: 0.5 });
+gsap.set(withoutEnterButton, { opacity: 0, scale: 0.5 });
+
+tl.to(loadingText, {
+    opacity: 1,
+    scale: 1,
+});
+
+
+
 let isLoaded = false;
 
 manager.onProgress = (url, loaded, total) => {
@@ -752,10 +753,25 @@ manager.onProgress = (url, loaded, total) => {
 manager.onLoad = () => {
     loadingText.textContent = "Loading Complete";
 
+    const tl1 = gsap.timeline({
+        defaults: {
+            ease: "power3.inOut",
+            duration: 0.25,
+        }
+    });
+
+    tl1.to(enterButton, {
+        opacity: 1,
+        scale: 1,
+    }, "+<0.1").to(withoutEnterButton, {
+        opacity: 1,
+        scale: 1,
+    }, "+<0.2");
+
     isLoaded = true;
+
     if (isLoaded) {
         enterButton.addEventListener("click", () => {
-            //? Play the sound
             const tl = gsap.timeline({
                 defaults: {
                     ease: "power2.inOut",
@@ -778,7 +794,7 @@ manager.onLoad = () => {
                     keyboardKeyAnimation(keyboardKeys);
                     landingAnimation();
                     withoutEnterButton.remove();
-                    Enter.remove();
+                    enterButton.remove();
                     loadingText.remove();
                     loadingPage.remove();
                 }
@@ -816,7 +832,6 @@ manager.onLoad = () => {
             });
         });
     }
-
 };
 
 //! Resize
