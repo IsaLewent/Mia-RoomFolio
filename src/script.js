@@ -266,12 +266,16 @@ const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
 
 function playBlupSound() {
     const soundClone = blupSound.cloneNode(true);
-
+    soundClone.currentTime = 0; // Reset the sound to the beginning
     soundClone.volume = 0.01;
 
     soundClone.play().catch((error) => {
         console.error("Error playing blup sound:", error);
     });
+    soundClone.addEventListener("ended", () => {
+        soundClone.src = null; // Ses kaynağını bellekten sil
+        soundClone.remove(); // Objeyi kalıcı olarak yok et
+    }, { once: true }); // once: true, bu dinleyicinin sadece bir kez çalışıp kendini yok etmesini sağlar
 }
 
 //! Keyboard Keys Animation
@@ -359,11 +363,7 @@ const landingAnimation = () => {
         x: 1,
         y: 1,
         z: 1
-    }, "-=0.4").to(jettPhoto[0].scale, {
-        x: 1,
-        y: 1,
-        z: 1
-    }, "-=0.4");
+    }, "-=0.60");
 
 
     t2.to(bigCuteCat[0].scale, {
@@ -390,11 +390,15 @@ const landingAnimation = () => {
         x: 1,
         y: 1,
         z: 1,
-    }, "-=0.4").to(portfolio[0].scale, {
+    }, "-=0.45").to(portfolio[0].scale, {
         x: 1,
         y: 1,
         z: 1,
-    }, "-=0.4")
+    }, "-=0.45").to(jettPhoto[0].scale, {
+        x: 1,
+        y: 1,
+        z: 1
+    }, "-=0.45");
 }
 
 /**
@@ -725,6 +729,7 @@ const loadingText = document.getElementById("loadingText");
 const enterButton = document.getElementById("enterButton");
 const withoutEnterButton = document.getElementById("withoutEnterButton");
 const loadingPage = document.querySelector(".loadingPage");
+let isLoaded = false;
 
 //! Loading Page Animation
 const tl = gsap.timeline({
@@ -742,96 +747,95 @@ tl.to(loadingText, {
     scale: 1,
 });
 
-
-
-let isLoaded = false;
-
 manager.onProgress = (url, loaded, total) => {
     const progress = (loaded / total) * 100;
     loadingText.textContent = `${progress.toFixed(0)}% Loaded`;
 }
 manager.onLoad = () => {
-    loadingText.textContent = "Loading Complete";
+    document.fonts.ready.then(() => {
+        loadingText.textContent = "Loading Complete";
 
-    const tl1 = gsap.timeline({
-        defaults: {
-            ease: "power3.inOut",
-            duration: 0.25,
+        const tl1 = gsap.timeline({
+            defaults: {
+                ease: "power3.inOut",
+                duration: 0.25,
+            }
+        });
+
+        tl1.to(enterButton, {
+            opacity: 1,
+            scale: 1,
+        }, "+<0.1").to(withoutEnterButton, {
+            opacity: 1,
+            scale: 1,
+        }, "+<0.2");
+
+        isLoaded = true;
+
+        if (isLoaded) {
+            enterButton.addEventListener("click", () => {
+                const tl2 = gsap.timeline({
+                    defaults: {
+                        ease: "power2.inOut",
+                        duration: 0.5,
+                    }
+                });
+                tl2.to(enterButton, {
+                    opacity: 0,
+                    scale: 0,
+                }).to(withoutEnterButton, {
+                    opacity: 0,
+                    scale: 0,
+                }, "<").to(loadingText, {
+                    opacity: 0,
+                    scale: 0,
+                }, "<").to(loadingPage, {
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                    ease: "back.out(1.8)",
+                    onComplete: () => {
+                        //! Call Animation for Keyboard Keys
+                        keyboardKeyAnimation(keyboardKeys);
+                        landingAnimation();
+                        withoutEnterButton.remove();
+                        enterButton.remove();
+                        loadingText.remove();
+                        loadingPage.remove();
+                    }
+                });
+            });
+
+            withoutEnterButton.addEventListener("click", () => {
+                const tl3 = gsap.timeline({
+                    defaults: {
+                        ease: "power2.inOut",
+                        duration: 0.5,
+                    }
+                });
+                tl3.to(enterButton, {
+                    opacity: 0,
+                    scale: 0,
+                }).to(withoutEnterButton, {
+                    opacity: 0,
+                    scale: 0,
+                }, "<").to(loadingText, {
+                    opacity: 0,
+                    scale: 0,
+                }, "<").to(loadingPage, {
+                    clipPath: "circle(0% at 50% 50%)",
+                    ease: "power1.inOut",
+                    onComplete: () => {
+                        //! Call Animation for Keyboard Keys
+                        keyboardKeyAnimation(keyboardKeys);
+                        landingAnimation();
+                        withoutEnterButton.remove();
+                        enterButton.remove();
+                        loadingText.remove();
+                        loadingPage.remove();
+                    }
+                });
+            });
         }
-    });
-
-    tl1.to(enterButton, {
-        opacity: 1,
-        scale: 1,
-    }, "+<0.1").to(withoutEnterButton, {
-        opacity: 1,
-        scale: 1,
-    }, "+<0.2");
-
-    isLoaded = true;
-
-    if (isLoaded) {
-        enterButton.addEventListener("click", () => {
-            const tl = gsap.timeline({
-                defaults: {
-                    ease: "power2.inOut",
-                    duration: 0.5,
-                }
-            });
-            tl.to(enterButton, {
-                opacity: 0,
-                scale: 0,
-            }).to(withoutEnterButton, {
-                opacity: 0,
-                scale: 0,
-            }, "<").to(loadingText, {
-                opacity: 0,
-                scale: 0,
-            }, "<").to(loadingPage, {
-                clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-                onComplete: () => {
-                    //! Call Animation for Keyboard Keys
-                    keyboardKeyAnimation(keyboardKeys);
-                    landingAnimation();
-                    withoutEnterButton.remove();
-                    enterButton.remove();
-                    loadingText.remove();
-                    loadingPage.remove();
-                }
-            });
-        });
-
-        withoutEnterButton.addEventListener("click", () => {
-            //? Play the sound
-            const tl = gsap.timeline({
-                defaults: {
-                    ease: "power2.inOut",
-                    duration: 0.5,
-                }
-            });
-            tl.to(enterButton, {
-                opacity: 0,
-                scale: 0,
-            }).to(withoutEnterButton, {
-                opacity: 0,
-                scale: 0,
-            }, "<").to(loadingText, {
-                opacity: 0,
-                scale: 0,
-            }, "<").to(loadingPage, {
-                clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-                onComplete: () => {
-                    //! Call Animation for Keyboard Keys
-                    keyboardKeyAnimation(keyboardKeys);
-                    landingAnimation();
-                    withoutEnterButton.remove();
-                    enterButton.remove();
-                    loadingText.remove();
-                    loadingPage.remove();
-                }
-            });
-        });
-    }
+    })
 };
 
 //! Resize
