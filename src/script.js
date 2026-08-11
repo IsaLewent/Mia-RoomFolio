@@ -893,6 +893,7 @@ manager.onLoad = () => {
                 }, "<").to(loadingPage, {
                     clipPath: "circle(0% at 50% 50%)",
                     ease: "power1.inOut",
+                    delay: 0.2,
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
                         keyboardKeyAnimation(keyboardKeys);
