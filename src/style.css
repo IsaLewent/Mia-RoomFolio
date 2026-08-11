@@ -14,7 +14,7 @@ body {
 }
 
 .loadingPage {
-  clip-path: circle(71% at 50% 50%);
+  clip-path: circle(70.7% at 50% 50%);
   position: relative;
   display: flex;
   align-items: center;
