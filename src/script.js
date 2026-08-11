@@ -790,7 +790,7 @@ manager.onLoad = () => {
                     opacity: 0,
                     scale: 0,
                 }, "<").to(loadingPage, {
-                    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                    clipPath: "circle(0% at 50% 50%)",
                     ease: "back.out(1.8)",
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
