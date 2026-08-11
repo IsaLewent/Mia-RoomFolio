@@ -14,6 +14,10 @@ body {
 }
 
 .loadingPage {
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,6 +30,7 @@ body {
   font-family: "CuteGroovy", sans-serif;
   color: #fff;
 }
+
 .loadingPageCenter {
   width: 100%;
   margin-top: 100px;
@@ -34,18 +39,26 @@ body {
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
-  gap: 30px;
+  gap: 24px;
 }
 
 .loadingPageTop {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+}
+
+.loadingText {
+  font-size: 24px;
+  letter-spacing: 2px;
+  font-family: "CuteGroovy", sans-serif;
+  color: #fff;
+  margin-bottom: 24px;
 }
 
 .enter {
   padding: 24px 36px;
+  letter-spacing: 2px;
   border-radius: 8px;
   border: none;
   background-color: #fff;
@@ -56,6 +69,7 @@ body {
 }
 
 .withoutEnter {
+  letter-spacing: 2px;
   padding: 24px 30px;
   border-radius: 8px;
   border: none;
@@ -147,7 +161,7 @@ body {
   padding: 0px 8px;
   font-size: 24px;
   color: #ffffff;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-family: "CuteGroovy", sans-serif;
 }

@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "./utils/OrbitControls.js";
 import GUI from "lil-gui";
 import gsap from "gsap";
+import useGSAP from "gsap";
 
 //! Import Stats.js
 import Stats from "three/examples/jsm/libs/stats.module.js";
@@ -45,13 +46,13 @@ stats.dom.style.right = '0px';
  ** Loaders
  */
 //? Loading Manager
-const loadingManager = new THREE.LoadingManager();
+const manager = new THREE.LoadingManager();
 
 //? Texture Loader
-const textureLoader = new THREE.TextureLoader(loadingManager);
+const textureLoader = new THREE.TextureLoader(manager);
 
 //? Draco Loader
-const dracoLoader = new DRACOLoader(loadingManager);
+const dracoLoader = new DRACOLoader(manager);
 dracoLoader.setDecoderPath("/draco/");
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
@@ -113,6 +114,35 @@ let smallFanBlades = [];
 let hoverableObjects = [];
 let keyboardKeys = [];
 let chair = null;
+
+//? DOM Elements
+const loadingText = document.getElementById("loadingText");
+const enterButton = document.getElementById("enterButton");
+const withoutEnterButton = document.getElementById("withoutEnterButton");
+const loadingPage = document.querySelector(".loadingPage");
+
+const tl = gsap.timeline({
+    defaults: {
+        ease: "power3.inOut",
+        duration: 0.25,
+    }
+});
+
+gsap.set(loadingText, { opacity: 0, scale: 0.5 });
+gsap.set(enterButton, { opacity: 0, scale: 0.5 });
+gsap.set(withoutEnterButton, { opacity: 0, scale: 0.5 });
+
+tl.to(loadingText, {
+    opacity: 1,
+    scale: 1,
+}, "<").to(enterButton, {
+    opacity: 1,
+    scale: 1,
+}, "+<0.1").to(withoutEnterButton, {
+    opacity: 1,
+    scale: 1,
+}, "+<0.2");
+
 
 //? Debug GUI
 // const gui = new GUI();
@@ -245,21 +275,18 @@ gsap.set(iconMoon, { opacity: 0, scale: 0.5, rotation: -90 });
 const playToggleAnimation = () => {
     isNight = !isNight; // Durumu tersine çevir
 
-    // Yaylanma hissi için GSAP Timeline oluştur
     const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "back.out(1.2)" } });
 
     if (isNight) {
-        // GECE Animasyonu
-        tl.to(toggleHandle, { x: 68, backgroundColor: "#3b82f6" }) // Yuvarlak sağa ve mavi
-            .to(themeToggleBtn, { backgroundColor: "#1e293b" }, "<") // Arkaplan koyu
-            .to(iconSun, { opacity: 0, scale: 0.5, rotation: 90, duration: 0.3 }, "<") // Güneş kaybolur
-            .to(iconMoon, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1"); // Ay ortaya çıkar
+        tl.to(toggleHandle, { x: 68, backgroundColor: "#3b82f6" })
+            .to(themeToggleBtn, { backgroundColor: "#1e293b" }, "<")
+            .to(iconSun, { opacity: 0, scale: 0.5, rotation: 90, duration: 0.3 }, "<")
+            .to(iconMoon, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1");
     } else {
-        // GÜNDÜZ Animasyonu 
-        tl.to(toggleHandle, { x: 0, backgroundColor: "#E5B8D9" }) // Yuvarlak başa ve turuncu
-            .to(themeToggleBtn, { backgroundColor: "#ff0fff" }, "<") // Arkaplan açık gri
-            .to(iconMoon, { opacity: 0, scale: 0.5, rotation: -90, duration: 0.3 }, "<") // Ay kaybolur
-            .to(iconSun, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1"); // Güneş ortaya çıkar
+        tl.to(toggleHandle, { x: 0, backgroundColor: "#E5B8D9" })
+            .to(themeToggleBtn, { backgroundColor: "#ff0fff" }, "<")
+            .to(iconMoon, { opacity: 0, scale: 0.5, rotation: -90, duration: 0.3 }, "<")
+            .to(iconSun, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1");
     }
 };
 
@@ -348,6 +375,9 @@ const landingAnimation = () => {
         x: 1,
         y: 1,
         z: 1
+    }, "<").to(jettKnife[0].rotation, {
+        y: Math.PI * 4,
+        ease: "power1.inOut",
     }, "-=0.4").to(switchConsole[0].scale, {
         x: 1,
         y: 1,
@@ -390,39 +420,6 @@ const landingAnimation = () => {
     }, "-=0.4")
 }
 
-// // ? CoffeeSmoke Geometry and Material
-// const smokeGeo = new THREE.PlaneGeometry(2, 2, 16, 64);
-// smokeGeo.scale(0.08, 0.3, 1);
-
-// // HATALI SATIRI SİLİYORUZ:
-// // smokeGeo.translate(0.88, 1.05, 0.305) 
-
-// const positions = smokeGeo.attributes.position;
-// const allPositions = new Float32Array(positions.count);
-// smokeGeo.setAttribute('aPosition', new THREE.BufferAttribute(allPositions, 1));
-
-// // Material
-// const smokeMat = new THREE.ShaderMaterial({
-//     depthWrite: false,
-//     side: THREE.DoubleSide,
-//     transparent: true,
-//     fragmentShader: coffeeSmokeFragmentShader,
-//     vertexShader: coffeeSmokeVertexShader,
-//     uniforms: {
-//         uTexture: new THREE.Uniform(coffeTexture),
-//         uTime: new THREE.Uniform(0)
-//     },
-//     attributes: {
-//         aRandom: new THREE.BufferAttribute(allPositions, 1)
-//     }
-// });
-
-// const smokeMesh = new THREE.Mesh(smokeGeo, smokeMat);
-
-// // DOĞRU YÖNTEM: Pozisyonu Mesh üzerinden veriyoruz
-// smokeMesh.position.set(0.88, 1.0, 0.309);
-// scene.add(smokeMesh);
-
 /**
  ** Load Model
  */
@@ -442,7 +439,7 @@ gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
             //? Monitors
             else if (childName.includes("monitor")) {
                 if (childName === "mainmonitor") {
-                    // child.material = firstMonitorMaterial;
+                    // child.material = firstMonitorMaterial; 
                 }
                 else {
                     child.material = secondMonitorMaterial;
@@ -578,9 +575,7 @@ gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
         return numA - numB;
     });
 
-    //! Call Animation for Keyboard Keys
-    keyboardKeyAnimation(keyboardKeys);
-    landingAnimation();
+
 });
 
 //? Knife Click Event
@@ -746,6 +741,95 @@ const tick = () => {
     window.requestAnimationFrame(tick);
 };
 tick();
+
+//? Loading Manager Events
+let isLoaded = false;
+
+manager.onProgress = (url, loaded, total) => {
+    const progress = (loaded / total) * 100;
+    loadingText.textContent = `${progress.toFixed(0)}% Loaded`;
+}
+manager.onLoad = () => {
+    loadingText.textContent = "Loading Complete";
+
+    isLoaded = true;
+    if (isLoaded) {
+        enterButton.addEventListener("click", () => {
+            //? Play the sound
+            const tl = gsap.timeline({
+                defaults: {
+                    ease: "power2.inOut",
+                    duration: 0.5,
+                }
+            });
+            tl.to(enterButton, {
+                opacity: 0,
+                scale: 0,
+            }).to(withoutEnterButton, {
+                opacity: 0,
+                scale: 0,
+            }, "<").to(loadingText, {
+                opacity: 0,
+                scale: 0,
+            }, "<").to(loadingPage, {
+                clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                onComplete: () => {
+                    //! Call Animation for Keyboard Keys
+                    keyboardKeyAnimation(keyboardKeys);
+                    landingAnimation();
+                    withoutEnterButton.remove();
+                    Enter.remove();
+                    loadingText.remove();
+                    loadingPage.remove();
+
+                    withoutEnterButton = null;
+                    Enter = null;
+                    loadingText = null;
+                    loadingPage = null;
+
+                }
+            });
+        });
+
+        withoutEnterButton.addEventListener("click", () => {
+            //? Play the sound
+            const tl = gsap.timeline({
+                defaults: {
+                    ease: "power2.inOut",
+                    duration: 0.5,
+                }
+            });
+            tl.to(enterButton, {
+                opacity: 0,
+                scale: 0,
+            }).to(withoutEnterButton, {
+                opacity: 0,
+                scale: 0,
+            }, "<").to(loadingText, {
+                opacity: 0,
+                scale: 0,
+            }, "<").to(loadingPage, {
+                clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                onComplete: () => {
+                    //! Call Animation for Keyboard Keys
+                    keyboardKeyAnimation(keyboardKeys);
+                    landingAnimation();
+                    withoutEnterButton.remove();
+                    enterButton.remove();
+                    loadingText.remove();
+                    loadingPage.remove();
+
+                    withoutEnterButton = null;
+                    enterButton = null;
+                    loadingText = null;
+                    loadingPage = null;
+
+                }
+            });
+        });
+    }
+
+};
 
 //! Resize
 window.addEventListener("resize", () => {
