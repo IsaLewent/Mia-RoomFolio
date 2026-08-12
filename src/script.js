@@ -26,6 +26,98 @@ import coffeeSmokeFragmentShader from "./shaders/coffeSmoke/fragment.glsl";
 import textures from "./utils/data.js";
 
 /*
+ * Button Animations
+ */
+//? About Section
+const closeButton = document.querySelector(".aboutCloseButton");
+const aboutSection = document.querySelector(".aboutSection");
+const aboutButton = document.getElementById("aboutButton");
+const aboutSectionTopLeft = document.getElementById("aboutSectionTopLeft");
+const aboutSectionTopRight = document.getElementById("aboutSectionTopRight");
+const aboutSectionBottomLeft = document.getElementById("aboutSectionBottomLeft");
+const aboutSectionBottomRight = document.getElementById("aboutSectionBottomRight");
+
+//! About Button Click Event
+aboutButton.addEventListener("click", () => {
+    const aboutSectionLandingTimeline = gsap.timeline();
+
+    aboutSectionLandingTimeline.to(aboutSection, {
+        translateY: "-50%",
+        duration: 1.0,
+        ease: "back.inOut(1.8)",
+        onComplete: () => {
+            controls.enabled = false;
+        }
+    }).to(aboutSectionTopLeft, {
+        opacity: 1,
+        xPercent: 0,
+        duration: 0.3,
+        ease: "power1.inOut",
+    }, "-=0.2").to(aboutSectionTopRight, {
+        opacity: 1,
+        xPercent: -50,
+        duration: 0.4,
+        ease: "power1.inOut",
+    }).to(aboutSectionBottomLeft, {
+        opacity: 1,
+        xPercent: 0,
+        duration: 0.3,
+        ease: "power1.inOut",
+    }, "-=0.1").to(aboutSectionBottomRight, {
+        opacity: 1,
+        xPercent: -50,
+        duration: 0.4,
+        ease: "power1.inOut",
+        onComplete: () => {
+            gsap.killTweensOf(aboutSectionTopLeft);
+            gsap.killTweensOf(aboutSectionTopRight);
+            gsap.killTweensOf(aboutSectionBottomLeft);
+            gsap.killTweensOf(aboutSectionBottomRight);
+        }
+    }, "-=0.1");
+});
+
+//! Close Button Animation
+closeButton.addEventListener("mouseenter", () => {
+    gsap.to(closeButton, {
+        scale: 1.15,
+        duration: 0.3,
+        ease: "back.out(2)"
+    });
+});
+
+closeButton.addEventListener("mouseleave", () => {
+    gsap.to(closeButton, {
+        scale: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: "back.out(2)"
+    });
+});
+
+closeButton.addEventListener("mousedown", () => {
+    gsap.to(closeButton, {
+        scale: 0.9,
+        boxShadow: "0px 0px 0px rgba(45, 27, 78, 1)",
+        duration: 0.1
+    });
+});
+
+//! Close Button Click Event
+closeButton.addEventListener("click", () => {
+    gsap.to(aboutSection, {
+        y: "-200%",
+        duration: 1.3,
+        ease: "back.inOut(1.8)",
+        onComplete: () => {
+            gsap.killTweensOf(aboutSection);
+            controls.enabled = true;
+        }
+    });
+});
+
+
+/*
  * Fps Stats 
 */
 const stats = Stats();
@@ -268,7 +360,7 @@ const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
 function playBlupSound() {
     const soundClone = blupSound.cloneNode(true);
     soundClone.currentTime = 0; // Reset the sound to the beginning
-    soundClone.volume = 0.01;
+    soundClone.volume = 0.02;
 
     soundClone.play().catch((error) => {
         console.error("Error playing blup sound:", error);
@@ -276,6 +368,7 @@ function playBlupSound() {
     soundClone.addEventListener("ended", () => {
         soundClone.src = null; // Ses kaynağını bellekten sil
         soundClone.remove(); // Objeyi kalıcı olarak yok et
+        gsap.killTweensOf(soundClone); // Eğer sesle ilgili bir animasyon varsa onu da durdur
     }, { once: true }); // once: true, bu dinleyicinin sadece bir kez çalışıp kendini yok etmesini sağlar
 }
 
@@ -842,9 +935,11 @@ gsap.set(loadingText, { opacity: 0, scale: 0.5 });
 gsap.set(enterButton, { opacity: 0, scale: 0.5 });
 gsap.set(withoutEnterButton, { opacity: 0, scale: 0.5 });
 
-tl.to(loadingText, {
-    opacity: 1,
-    scale: 1,
+document.fonts.ready.then(() => {
+    tl.to(loadingText, {
+        opacity: 1,
+        scale: 1,
+    });
 });
 
 //! Loading Manager Events

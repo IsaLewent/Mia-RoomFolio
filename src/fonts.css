@@ -4,3 +4,20 @@
   font-weight: normal;
   font-style: normal;
 }
+
+/*
+* About Section
+*/
+@font-face {
+  font-family: "FredokaOne"; /* Kod içinde kullanacağın kısa isim */
+  src: url("../public/fonts/fredoka-one.one-regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nunito"; /* Kod içinde kullanacağın kısa isim */
+  src: url("../public/fonts/NunitoSans-LightItalic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
