@@ -48,33 +48,23 @@ aboutButton.addEventListener("click", () => {
         onComplete: () => {
             controls.enabled = false;
         }
-    }).to(aboutSectionTopLeft, {
-        opacity: 1,
-        xPercent: 0,
-        duration: 0.3,
-        ease: "power1.inOut",
-    }, "-=0.2").to(aboutSectionTopRight, {
-        opacity: 1,
-        xPercent: -50,
-        duration: 0.4,
-        ease: "power1.inOut",
-    }).to(aboutSectionBottomLeft, {
-        opacity: 1,
-        xPercent: 0,
-        duration: 0.3,
-        ease: "power1.inOut",
-    }, "-=0.1").to(aboutSectionBottomRight, {
-        opacity: 1,
-        xPercent: -50,
-        duration: 0.4,
-        ease: "power1.inOut",
-        onComplete: () => {
-            gsap.killTweensOf(aboutSectionTopLeft);
-            gsap.killTweensOf(aboutSectionTopRight);
-            gsap.killTweensOf(aboutSectionBottomLeft);
-            gsap.killTweensOf(aboutSectionBottomRight);
-        }
-    }, "-=0.1");
+    }).fromTo(aboutSectionTopLeft,
+        { opacity: 0, xPercent: -50 },
+        { opacity: 1, xPercent: 0, duration: 0.4, ease: "power2.out" },
+        "-=0.2"
+    ).fromTo(aboutSectionTopRight,
+        { opacity: 0, xPercent: 50 },
+        { opacity: 1, xPercent: 0, duration: 0.4, ease: "power2.out" },
+        "<"
+    ).fromTo(aboutSectionBottomLeft,
+        { opacity: 0, xPercent: -50 },
+        { opacity: 1, xPercent: 0, duration: 0.4, ease: "power2.out" },
+        "-=0.1"
+    ).fromTo(aboutSectionBottomRight,
+        { opacity: 0, xPercent: 50 },
+        { opacity: 1, xPercent: 0, duration: 0.4, ease: "power2.out" },
+        "<"
+    );
 });
 
 //! Close Button Animation
@@ -105,15 +95,26 @@ closeButton.addEventListener("mousedown", () => {
 
 //! Close Button Click Event
 closeButton.addEventListener("click", () => {
-    gsap.to(aboutSection, {
-        y: "-200%",
-        duration: 1.3,
-        ease: "back.inOut(1.8)",
+    const tl = gsap.timeline({
         onComplete: () => {
-            gsap.killTweensOf(aboutSection);
             controls.enabled = true;
         }
     });
+    tl.to([aboutSectionTopLeft, aboutSectionBottomLeft], {
+        opacity: 0,
+        xPercent: -50,
+        duration: 0.3,
+        ease: "power2.in"
+    }).to([aboutSectionTopRight, aboutSectionBottomRight], {
+        opacity: 0,
+        xPercent: 50,
+        duration: 0.3,
+        ease: "power2.in"
+    }, "<").to(aboutSection, {
+        translateY: "-200%",
+        duration: 0.8,
+        ease: "back.in(1.2)"
+    }, "<");
 });
 
 
@@ -301,7 +302,6 @@ secondMonitorVideo.src = "./Videos//StardewValley.mp4";
 secondMonitorVideo.loop = true;
 secondMonitorVideo.muted = true;
 secondMonitorVideo.autoplay = true;
-secondMonitorVideo.play();
 
 const secondVideoTexture = new THREE.VideoTexture(secondMonitorVideo);
 secondVideoTexture.flipY = false;
@@ -366,7 +366,6 @@ function playBlupSound() {
         console.error("Error playing blup sound:", error);
     });
     soundClone.addEventListener("ended", () => {
-        soundClone.src = null; // Ses kaynağını bellekten sil
         soundClone.remove(); // Objeyi kalıcı olarak yok et
         gsap.killTweensOf(soundClone); // Eğer sesle ilgili bir animasyon varsa onu da durdur
     }, { once: true }); // once: true, bu dinleyicinin sadece bir kez çalışıp kendini yok etmesini sağlar
@@ -384,7 +383,6 @@ const keyboardKeyAnimation = (keyboardKeys) => {
                 ease: "back.out(2.0)",
                 duration: 0.5,
             }
-
         });
 
         tl.to(key.scale, {
@@ -997,6 +995,7 @@ manager.onLoad = () => {
                     delay: 11,
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
+                        secondMonitorVideo.play();
                         keyboardKeyAnimation(keyboardKeys);
                         landingAnimation();
                         withoutEnterButton.remove();

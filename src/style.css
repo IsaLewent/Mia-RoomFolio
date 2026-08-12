@@ -259,8 +259,7 @@ body {
   border-radius: 8px;
   box-shadow: 6px 6px 0px #000000;
   cursor: pointer;
-  transition: all 0.2s ease;
-  transform: translate(-50%, 0);
+  transition: box-shadow 0.2s ease;
   opacity: 0;
 }
 .aboutTopLeft:hover {
@@ -288,8 +287,7 @@ body {
   box-shadow: 6px 6px 0px #000000;
   border-radius: 8px;
   cursor: pointer;
-  transform: translate(50%, 0);
-  transition: all 0.2s ease;
+  transition: box-shadow 0.2s ease;
   opacity: 0;
 }
 
@@ -309,6 +307,7 @@ body {
 
 .aboutTopHeader {
   font-size: 18px;
+  height: 100%;
   color: #fee715;
   font-family: "FredokaOne", sans-serif;
   text-transform: uppercase;
@@ -316,6 +315,7 @@ body {
 }
 
 .aboutTopText {
+  height: 100%;
   font-size: 18px;
   color: #f8f9fa;
   font-family: "Nunito", sans-serif;
@@ -370,8 +370,7 @@ body {
   box-shadow: 6px 6px 0px #000000;
   padding: 16px 16px 0px 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  transform: translate(-50%, 0);
+  transition: box-shadow 0.2s ease;
   opacity: 0;
 }
 
@@ -387,8 +386,7 @@ body {
   display: flex;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  transform: translate(50%, 0);
+  transition: box-shadow 0.2s ease;
   opacity: 0;
 }
 
