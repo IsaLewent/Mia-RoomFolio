@@ -26,6 +26,35 @@ import coffeeSmokeFragmentShader from "./shaders/coffeSmoke/fragment.glsl";
 import textures from "./utils/data.js";
 
 /*
+ * Sounds 
+*/
+//? Loading Page Whoosh Sound 
+const whooshSound = new Audio("./Sounds/LoadingPageSound.mp3");
+whooshSound.currentTime = 0; // Reset the sound to the beginning
+whooshSound.volume = 0.4;
+
+//? Keyboard Keys Blup Sound
+const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
+
+function playBlupSound() {
+    const soundClone = blupSound.cloneNode(true);
+    soundClone.currentTime = 0; // Reset the sound to the beginning
+    soundClone.volume = 0.08;
+
+    soundClone.play().catch((error) => {
+        console.error("Error playing blup sound:", error);
+    });
+    soundClone.addEventListener("ended", () => {
+        soundClone.remove(); // Objeyi kalıcı olarak yok et
+        gsap.killTweensOf(soundClone); // Eğer sesle ilgili bir animasyon varsa onu da durdur
+    }, { once: true }); // once: true, bu dinleyicinin sadece bir kez çalışıp kendini yok etmesini sağlar
+}
+
+//? Button Hover Sound
+const hoverSound = new Audio("./Sounds/HoverSound.mp3");
+hoverSound.currentTime = 0; // Reset the sound to the beginning
+
+/*
  * Button Animations
  */
 //? About Section
@@ -40,11 +69,13 @@ const aboutSectionBottomRight = document.getElementById("aboutSectionBottomRight
 //! About Button Click Event
 aboutButton.addEventListener("click", () => {
     const aboutSectionLandingTimeline = gsap.timeline();
-
     aboutSectionLandingTimeline.to(aboutSection, {
         translateY: "-50%",
         duration: 1.0,
         ease: "back.inOut(1.8)",
+        onStart: () => {
+            whooshSound.play();
+        },
         onComplete: () => {
             controls.enabled = false;
         }
@@ -67,8 +98,25 @@ aboutButton.addEventListener("click", () => {
     );
 });
 
+aboutButton.addEventListener("pointerenter", () => {
+    gsap.to(aboutButton, {
+        scale: 1.15,
+        duration: 0.3,
+        ease: "back.out(2)"
+    });
+})
+
+aboutButton.addEventListener("mouseleave", () => {
+    gsap.to(aboutButton, {
+        scale: 1,
+        duration: 0.3,
+        ease: "back.out(2)"
+    });
+});
+
 //! Close Button Animation
-closeButton.addEventListener("mouseenter", () => {
+closeButton.addEventListener("pointerenter", () => {
+    hoverSound.play();
     gsap.to(closeButton, {
         scale: 1.15,
         duration: 0.3,
@@ -93,6 +141,20 @@ closeButton.addEventListener("mousedown", () => {
     });
 });
 
+closeButton.addEventListener("mouseup", () => {
+    gsap.to(closeButton, {
+        scale: 1.15,
+        boxShadow: "0px 0px 20px rgba(45, 27, 78, 1)",
+        duration: 0.1
+    });
+
+    gsap.to(closeButton, {
+        scale: 1,
+        duration: 0.1,
+        ease: "back.inOut(1.8)",
+    });
+});
+
 //! Close Button Click Event
 closeButton.addEventListener("click", () => {
     const tl = gsap.timeline({
@@ -113,10 +175,24 @@ closeButton.addEventListener("click", () => {
     }, "<").to(aboutSection, {
         translateY: "-200%",
         duration: 0.8,
-        ease: "back.in(1.2)"
+        ease: "back.in(1.2)",
+        onStart: () => {
+            whooshSound.play();
+        }
     }, "<");
 });
 
+
+/*
+ * Contact Section 
+*/
+const contactButton = document.getElementById("contactButton");
+
+
+/**
+ * Sound Button
+*/
+const soundButton = document.getElementById("soundButton");
 
 /*
  * Fps Stats 
@@ -354,25 +430,8 @@ const playToggleAnimation = () => {
     }
 };
 
-//! Keyboard Keys Blup Sound (Do it after Loading Page is ready)
-const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
-
-function playBlupSound() {
-    const soundClone = blupSound.cloneNode(true);
-    soundClone.currentTime = 0; // Reset the sound to the beginning
-    soundClone.volume = 0.02;
-
-    soundClone.play().catch((error) => {
-        console.error("Error playing blup sound:", error);
-    });
-    soundClone.addEventListener("ended", () => {
-        soundClone.remove(); // Objeyi kalıcı olarak yok et
-        gsap.killTweensOf(soundClone); // Eğer sesle ilgili bir animasyon varsa onu da durdur
-    }, { once: true }); // once: true, bu dinleyicinin sadece bir kez çalışıp kendini yok etmesini sağlar
-}
-
 //! Keyboard Keys Animation
-const keyboardKeyAnimation = (keyboardKeys) => {
+const keyboardKeyAnimation = (keyboardKeys, playSound) => {
     keyboardKeys.forEach((key, index) => {
         const generalDelay = 0.1;
         const delay = generalDelay + index * 0.05;
@@ -390,7 +449,8 @@ const keyboardKeyAnimation = (keyboardKeys) => {
             y: 1,
             z: 1,
             onStart: () => {
-                playBlupSound();
+                playSound ? playBlupSound() : null;
+
             }
         }).to(key.position,
             {
@@ -449,8 +509,8 @@ const landingAnimation = () => {
         y: 1,
         z: 1
     }, "<").to(jettKnife[0].rotation, {
-        y: Math.PI * 4,
-        ease: "power1.inOut",
+        y: -Math.PI * 3,
+        ease: "power2.inOut",
     }, "-=0.4").to(switchConsole[0].scale, {
         x: 1,
         y: 1,
@@ -665,28 +725,21 @@ window.addEventListener("click", () => {
             })
         }
     }
-
 });
+
+//? Theme Toggle Button Click Event
 themeToggleBtn.addEventListener('click', () => {
     playToggleAnimation();
     scene.traverse((child) => {
-        // Sadece 3D modelleri (Mesh) ve materyali olanları filtrele
         if (child.isMesh && child.material) {
             const childName = child.name.toLowerCase();
-            // Kendi texture objenin içindeki isimleri dön (bake1, bake2 vb.)
             Object.keys(textures).forEach((key) => {
-
-                // Eğer objenin adı texture adıyla eşleşiyorsa
                 if (childName.includes(key)) {
-
-                    // isNight durumuna göre materyalin resmini değiştir
                     if (isNight) {
                         child.material.map = loaderTextures.night[key];
                     } else {
                         child.material.map = loaderTextures.morning[key];
                     }
-
-                    // Ekran kartına (GPU) değişimi bildir
                     child.material.needsUpdate = true;
                 }
             });
@@ -821,6 +874,91 @@ const enterButton = document.getElementById("enterButton");
 const withoutEnterButton = document.getElementById("withoutEnterButton");
 const loadingPage = document.querySelector(".loadingPage");
 let isLoaded = false;
+
+//! Buttons Animations
+const buttons1 = [aboutButton, contactButton, soundButton, themeToggleBtn];
+const buttons2 = [enterButton, withoutEnterButton];
+
+buttons1.forEach((button) => {
+    button.addEventListener("pointerenter", () => {
+        hoverSound.play();
+        gsap.to(button, {
+            scale: 1.15,
+            duration: 0.3,
+            ease: "back.out(2)",
+        });
+    });
+
+    button.addEventListener("mouseleave", () => {
+        gsap.to(button, {
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(2)"
+        });
+    });
+
+    button.addEventListener("mousedown", () => {
+        gsap.to(button, {
+            scale: 0.9,
+            duration: 0.1,
+            ease: "back.inOut(1.8)",
+        });
+    });
+
+    button.addEventListener("mouseup", () => {
+        gsap.to(button, {
+            scale: 1.15,
+            duration: 0.1,
+            ease: "back.inOut(1.8)",
+        });
+
+        gsap.to(button, {
+            scale: 1,
+            duration: 0.1,
+            ease: "back.inOut(1.8)",
+        });
+    })
+});
+
+buttons2.forEach((button) => {
+    button.addEventListener("pointerenter", () => {
+        gsap.to(button, {
+            scale: 1.15,
+            duration: 0.3,
+            ease: "back.out(2)",
+        });
+    });
+
+    button.addEventListener("mouseleave", () => {
+        gsap.to(button, {
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(2)"
+        });
+    });
+
+    button.addEventListener("mousedown", () => {
+        gsap.to(button, {
+            scale: 0.9,
+            duration: 0.1,
+            ease: "back.inOut(1.8)",
+        });
+    });
+
+    button.addEventListener("mouseup", () => {
+        gsap.to(button, {
+            scale: 1.15,
+            duration: 0.1,
+            ease: "back.inOut(1.8)",
+        });
+
+        gsap.to(button, {
+            scale: 1,
+            duration: 0.1,
+            ease: "back.inOut(1.8)",
+        });
+    })
+});
 
 
 
@@ -993,10 +1131,13 @@ manager.onLoad = () => {
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
                     ease: "power1.inOut",
                     delay: 11,
+                    onStart: () => {
+                        whooshSound.play();
+                    },
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
                         secondMonitorVideo.play();
-                        keyboardKeyAnimation(keyboardKeys);
+                        keyboardKeyAnimation(keyboardKeys, true);
                         landingAnimation();
                         withoutEnterButton.remove();
                         enterButton.remove();
@@ -1029,9 +1170,12 @@ manager.onLoad = () => {
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
                     delay: 11,
                     ease: "power1.inOut",
+                    onStart: () => {
+                        whooshSound.play();
+                    },
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
-                        keyboardKeyAnimation(keyboardKeys);
+                        keyboardKeyAnimation(keyboardKeys, true);
                         landingAnimation();
                         withoutEnterButton.remove();
                         enterButton.remove();
