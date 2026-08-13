@@ -25,16 +25,16 @@ import textures from "./utils/data.js";
  * Sounds 
 */
 //? Background Music
-const bgMusic = new Audio("./sounds/CozyLofiMusic.mp3");
+const bgMusic = new Audio("./Sounds/CozyLofiMusic.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.02;
 
 //? Loading Page Whoosh Sound 
-const whooshSound = new Audio("./sounds/loadingpagesound.mp3");
+const whooshSound = new Audio("./Sounds/loadingpagesound.mp3");
 whooshSound.volume = 0.6;
 
 //? Keyboard Keys Blup Sound
-const blupSound = new Audio("./sounds/keyboardblupsound.mp3");
+const blupSound = new Audio("./Sounds/keyboardblupsound.mp3");
 blupSound.currentTime = 0;
 
 function playBlupSound() {
@@ -57,7 +57,7 @@ const poolSize = 6; // Havuz büyüklüğü (5 buton varsa 5 idealdir)
 let poolIndex = 0; // Sıradaki sesin numarası
 
 for (let i = 0; i < poolSize; i++) {
-    const hoverSound = new Audio("./sounds/HoverSound.mp3");
+    const hoverSound = new Audio("./Sounds/HoverSound.mp3");
     hoverSound.volume = 0.5;
     hoverSoundPool.push(hoverSound);
 }
