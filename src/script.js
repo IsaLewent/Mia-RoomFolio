@@ -30,7 +30,7 @@ bgMusic.loop = true;
 bgMusic.volume = 0.02;
 
 //? Loading Page Whoosh Sound 
-const whooshSound = new Audio("./Sounds/loadingpagesound.mp3");
+const whooshSound = new Audio("./Sounds/LoadingPageSoundd.mp3");
 whooshSound.volume = 0.6;
 
 //? Keyboard Keys Blup Sound
