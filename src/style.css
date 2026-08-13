@@ -439,3 +439,144 @@ body {
 .specialWord3 {
   color: cyan;
 }
+
+.contactSection {
+  position: fixed;
+  top: 50%; /* Navbar'ın hemen altında */
+  left: 50%;
+  width: 30%;
+  height: 20%;
+  background-color: #ff0fff; /* Yarı saydam arka plan */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 12px;
+  transform: translate(-50%, -400%);
+  z-index: 999;
+  gap: 20px;
+  box-shadow: 4px 4px 0px rgba(45, 27, 78, 1);
+}
+
+.contactTop {
+  font-size: 32px;
+  letter-spacing: 2px;
+  font-family: "CuteGroovy", sans-serif;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.contactBottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.githubLogo {
+  padding: 12px;
+  border-radius: 8px;
+  width: 100px;
+  height: 100px;
+  background-color: #1a1525;
+  box-shadow: 6px 6px 0px #000000;
+  transition: box-shadow 0.4s ease-in-out;
+}
+.githubLogo:hover {
+  transform: translate(4px, 4px); /* Gölgenin yönüne doğru kayar */
+  box-shadow: 2px 2px 0px #000000; /* Gölge küçülür, basılmış hissi verir */
+}
+
+.instagramLogo {
+  padding: 12px;
+  border-radius: 8px;
+  width: 100px;
+  height: 100px;
+  background-color: #1a1525;
+  box-shadow: 6px 6px 0px #000000;
+  transition: box-shadow 0.4s ease-in-out;
+}
+
+.instagramLogo:hover {
+  transform: translate(4px, 4px); /* Gölgenin yönüne doğru kayar */
+  box-shadow: 2px 2px 0px #000000; /* Gölge küçülür, basılmış hissi verir */
+}
+
+.linkedinLogo {
+  padding: 12px;
+  border-radius: 8px;
+  width: 100px;
+  height: 100px;
+  background-color: #1a1525;
+  box-shadow: 6px 6px 0px #000000;
+  transition: box-shadow 0.4s ease-in-out;
+}
+
+.linkedinLogo:hover {
+  transform: translate(4px, 4px); /* Gölgenin yönüne doğru kayar */
+  box-shadow: 2px 2px 0px #000000; /* Gölge küçülür, basılmış hissi verir */
+}
+
+.twitterLogo {
+  padding: 12px;
+  border-radius: 8px;
+  width: 100px;
+  height: 100px;
+  background-color: #1a1525;
+  box-shadow: 6px 6px 0px #000000;
+  transition: box-shadow 0.4s ease-in-out;
+}
+
+.twitterLogo:hover {
+  transform: translate(4px, 4px); /* Gölgenin yönüne doğru kayar */
+  box-shadow: 2px 2px 0px #000000; /* Gölge küçülür, basılmış hissi verir */
+}
+
+.githubLogo a img {
+  width: 80px;
+  height: 80px;
+}
+
+.instagramLogo a img {
+  width: 80px;
+  height: 80px;
+}
+
+.linkedinLogo a img {
+  width: 80px;
+  height: 80px;
+}
+
+.twitterLogo a img {
+  width: 80px;
+  height: 80px;
+}
+
+.contactCloseButton {
+  position: absolute;
+  /* Butonu kartın tam köşesine, yarısı dışarı taşacak şekilde yerleştiriyoruz */
+  top: -20px;
+  right: -20px;
+  width: 45px;
+  height: 45px;
+
+  /* Renkler ve Sınırlar */
+  background-color: #facc15; /* Canlı retro sarı */
+  color: #2d1b4e; /* Koyu mor X işareti */
+  border: 3px solid #2d1b4e; /* Atari butonu hissi için kalın çerçeve */
+  border-radius: 50%; /* Tam yuvarlak */
+
+  /* İçerik Hizalama */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "CuteGroovy", sans-serif;
+  font-size: 24px;
+  cursor: pointer;
+
+  /* 3D Atari Butonu Gölgesi */
+  box-shadow: 4px 4px 0px rgba(45, 27, 78, 1);
+}
