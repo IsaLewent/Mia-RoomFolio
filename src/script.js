@@ -1,3 +1,6 @@
+//! Import Vercel Analytics
+import { inject } from '@vercel/analytics';
+
 //! Import Three.js basics
 import * as THREE from "three";
 import { OrbitControls } from "./utils/OrbitControls.js";
@@ -20,6 +23,9 @@ import holographicFragmentShader from "./shaders/holographic/fragmentShader.glsl
 
 //! Textures
 import textures from "./utils/data.js";
+
+//! Initialize Vercel Analytics
+inject();
 
 /*
  * Sounds 
