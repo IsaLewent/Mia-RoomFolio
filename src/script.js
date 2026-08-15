@@ -760,7 +760,7 @@ gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
         }
     });
 
-    gltf.scene.scale.set(isMobile ? 0.7 : 1, isMobile ? 0.7 : 1, isMobile ? 0.7 : 1);
+    gltf.scene.scale.set(1, 1, 1);
     scene.add(gltf.scene);
 
     //? Sort Keyboard Keys by Name
