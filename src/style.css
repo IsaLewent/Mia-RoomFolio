@@ -659,6 +659,9 @@ body {
     font-size: 20px;
     cursor: pointer;
     pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   .withoutEnter {
@@ -673,6 +676,9 @@ body {
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   .navbar {
@@ -741,6 +747,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   .theme-toggle {
@@ -754,6 +763,9 @@ body {
     padding: 0px 8px; /* Yuvarlağın kapsüle değmemesi için iç boşluk */
     box-sizing: border-box;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   /* Kayacak olan Yuvarlak */
