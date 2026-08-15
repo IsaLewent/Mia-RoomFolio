@@ -35,13 +35,12 @@ body {
 .loadingPageCenter {
   position: relative;
   width: 100%;
-  margin-top: 100px;
-  height: 16rem;
+  margin-top: 20px;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: column;
-  gap: 24px;
 }
 
 .hi-section {
@@ -59,6 +58,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.loadingPageBottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
 }
 
 .loadingText {
@@ -79,13 +85,13 @@ body {
   font-family: "CuteGroovy", sans-serif;
   font-size: 24px;
   cursor: pointer;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
 }
 
 .withoutEnter {
   letter-spacing: 2px;
-  padding: 24px 30px;
+  padding: 24px 36px;
   border-radius: 8px;
   border: none;
   background-color: #fff;
@@ -454,10 +460,11 @@ body {
   justify-content: space-between;
   padding: 16px;
   border-radius: 12px;
-  transform: translate(-50%, -400%);
+  transform: translate(-50%, -600%);
   z-index: 999;
   gap: 20px;
   box-shadow: 4px 4px 0px rgba(45, 27, 78, 1);
+  opacity: 1;
 }
 
 .contactTop {
@@ -557,26 +564,235 @@ body {
 
 .contactCloseButton {
   position: absolute;
-  /* Butonu kartın tam köşesine, yarısı dışarı taşacak şekilde yerleştiriyoruz */
   top: -20px;
   right: -20px;
   width: 45px;
   height: 45px;
-
-  /* Renkler ve Sınırlar */
-  background-color: #facc15; /* Canlı retro sarı */
-  color: #2d1b4e; /* Koyu mor X işareti */
-  border: 3px solid #2d1b4e; /* Atari butonu hissi için kalın çerçeve */
-  border-radius: 50%; /* Tam yuvarlak */
-
-  /* İçerik Hizalama */
+  background-color: #facc15;
+  color: #2d1b4e;
+  border: 3px solid #2d1b4e;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "CuteGroovy", sans-serif;
   font-size: 24px;
   cursor: pointer;
-
-  /* 3D Atari Butonu Gölgesi */
   box-shadow: 4px 4px 0px rgba(45, 27, 78, 1);
+}
+
+/**
+ * Responsive Design
+ */
+@media (max-width: 768px) {
+  .loadingPage {
+    --webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #fc05c6;
+    z-index: 9999;
+    text-transform: uppercase;
+    font-family: "CuteGroovy", sans-serif;
+    color: #fff;
+  }
+
+  .loadingPageCenter {
+    position: relative;
+    width: 100%;
+    margin-top: 10%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .hi-section {
+    width: 100%;
+    position: absolute;
+    letter-spacing: 2px;
+    text-align: center;
+    font-size: 30px;
+    font-family: "CuteGroovy", sans-serif;
+    color: #fff;
+    padding: 8px 16px;
+    visibility: hidden;
+  }
+
+  .loadingPageTop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .loadingPageBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .loadingText {
+    font-size: 18px;
+    letter-spacing: 2px;
+    font-family: "CuteGroovy", sans-serif;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+
+  .enter {
+    padding: 14px 20px;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    border: none;
+    background-color: #fff;
+    color: #ff07f3;
+    font-family: "CuteGroovy", sans-serif;
+    font-size: 20px;
+    cursor: pointer;
+    pointer-events: none;
+  }
+
+  .withoutEnter {
+    letter-spacing: 2px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #fff;
+    color: #ff07f3;
+    font-family: "CuteGroovy", sans-serif;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .navbar {
+    position: fixed;
+    list-style: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-left: 10px;
+    z-index: 999;
+  }
+
+  #aboutButton {
+    display: none;
+  }
+
+  #contactButton {
+    display: none;
+  }
+
+  .aboutSection {
+    display: none;
+  }
+
+  .contactSection {
+    display: none;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-first {
+    font-size: 46px;
+  }
+
+  .logo-second {
+    font-size: 46px;
+  }
+
+  .logo-third {
+    font-size: 46px;
+  }
+
+  .nav-button {
+    width: 120px;
+    height: 40px;
+    letter-spacing: 2px;
+    background: #ff0fff;
+    color: #fff;
+    border: none;
+    padding: 0px 8px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: "CuteGroovy", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .theme-toggle {
+    width: 120px;
+    height: 40px;
+    background-color: #ff0fff; /* Gündüz rengi (Açık gri) */
+    border-radius: 44px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0px 8px; /* Yuvarlağın kapsüle değmemesi için iç boşluk */
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Kayacak olan Yuvarlak */
+  .toggle-handle {
+    width: 30px;
+    height: 30px;
+    background-color: #e5b8d9; /* Gündüz güneşi rengi (Turuncu) */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* SVG'leri hizalamak için */
+    z-index: 2;
+  }
+
+  /* SVG'lerin genel ayarı */
+  .toggle-icon {
+    width: 24px;
+    height: 24px;
+    position: absolute; /* İkisini tam üst üste bindirir */
+    color: white; /* İkonların iç rengi */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .loadingPage {
+    --webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #fc05c6;
+    z-index: 9999;
+    text-transform: uppercase;
+    font-family: "CuteGroovy", sans-serif;
+    color: #fff;
+  }
 }

@@ -21,6 +21,10 @@ import holographicFragmentShader from "./shaders/holographic/fragmentShader.glsl
 //! Textures
 import textures from "./utils/data.js";
 
+//! isMıbile 
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+
 /*
  * Sounds 
 */
@@ -413,7 +417,7 @@ const hologarphicMaterial = new THREE.ShaderMaterial({
     fragmentShader: holographicFragmentShader,
     uniforms: {
         uTime: new THREE.Uniform(0),
-        uColor: new THREE.Uniform(new THREE.Color("#fee715")),
+        uColor: new THREE.Uniform(new THREE.Color("#ff00ff")),
     },
 })
 
@@ -480,7 +484,7 @@ const playToggleAnimation = () => {
     const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "back.out(1.2)" } });
 
     if (isNight) {
-        tl.to(toggleHandle, { x: 68, backgroundColor: "#3b82f6" })
+        tl.to(toggleHandle, { x: isMobile ? 70 : 68, backgroundColor: "#3b82f6" })
             .to(themeToggleBtn, { backgroundColor: "#1e293b" }, "<")
             .to(iconSun, { opacity: 0, scale: 0.5, rotation: 90, duration: 0.3 }, "<")
             .to(iconMoon, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1");
@@ -614,6 +618,7 @@ const landingAnimation = () => {
         z: 1
     }, "-=0.45");
 }
+
 
 /**
  ** Load Model
@@ -755,7 +760,7 @@ gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
         }
     });
 
-    gltf.scene.scale.set(1, 1, 1);
+    gltf.scene.scale.set(isMobile ? 0.7 : 1, isMobile ? 0.7 : 1, isMobile ? 0.7 : 1);
     scene.add(gltf.scene);
 
     //? Sort Keyboard Keys by Name
@@ -808,7 +813,7 @@ themeToggleBtn.addEventListener('click', () => {
             });
         }
     });
-    hologarphicMaterial.uniforms.uColor.value.set(isNight ? "#0b2089" : "#fee715")
+    hologarphicMaterial.uniforms.uColor.value.set(isNight ? "#0b2089" : "#ff00ff")
 });
 
 //? Renderer
@@ -1180,7 +1185,7 @@ manager.onLoad = () => {
 
         if (isLoaded) {
             enterButton.addEventListener("click", () => {
-                soundButton.style.fontSize = "20px";
+                soundButton.style.fontSize = isMobile ? "16px" : "20px";
                 soundButton.innerHTML = `Sound Off`;
                 const tl2 = gsap.timeline({
                     defaults: {
@@ -1191,13 +1196,15 @@ manager.onLoad = () => {
                 tl2.to(enterButton, {
                     opacity: 0,
                     scale: 0,
-
+                    display: "none"
                 }, "<").to(withoutEnterButton, {
                     opacity: 0,
                     scale: 0,
+                    display: "none"
                 }, "<").to(loadingText, {
                     opacity: 0,
                     scale: 0,
+                    display: "none",
                     onComplete: () => {
                         hiSectionAnimation();
                     }
@@ -1224,7 +1231,7 @@ manager.onLoad = () => {
             });
 
             withoutEnterButton.addEventListener("click", () => {
-                soundButton.style.fontSize = "24px";
+                soundButton.style.fontSize = isMobile ? "16px" : "24px";
                 soundButton.innerHTML = `Sound On`;
                 const tl3 = gsap.timeline({
                     defaults: {
@@ -1235,12 +1242,15 @@ manager.onLoad = () => {
                 tl3.to(enterButton, {
                     opacity: 0,
                     scale: 0,
+                    display: "none"
                 }, "<").to(withoutEnterButton, {
                     opacity: 0,
                     scale: 0,
+                    display: "none"
                 }, "<").to(loadingText, {
                     opacity: 0,
                     scale: 0,
+                    display: "none",
                     onComplete: () => {
                         hiSectionAnimation();
                     }
@@ -1251,6 +1261,7 @@ manager.onLoad = () => {
                     onComplete: () => {
                         //! Call Animation for Keyboard Keys
                         keyboardKeyAnimation(keyboardKeys, true);
+                        secondMonitorVideo.play();
                         landingAnimation();
                         withoutEnterButton.remove();
                         enterButton.remove();
