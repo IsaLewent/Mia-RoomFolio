@@ -22,8 +22,8 @@ Users can navigate inside this room, control the Day/Night cycle, and experience
 
 | ☀️ Morning Vibe | 🌙 Night Vibe |
 | :---: | :---: |
-| <img src="./images/SecondMorningView.png" alt="Morning View" width="400"/> | <img src="public/images/SecondNightView.png" alt="Night View" width="400"/> |
-| <img src="./images/morningViewUI.png" alt="UI Morning" width="400"/> | <img src="public/images/nightViewUI.png" alt="UI Night" width="400"/> |
+| <img src="./images/SecondMorningView.png" alt="Morning View" width="400"/> | <img src="./images/SecondNightView.png" alt="Night View" width="400"/> |
+| <img src="./images/morningViewUI.png" alt="UI Morning" width="400"/> | <img src="./images/nightViewUI.png" alt="UI Night" width="400"/> |
 
 ---
 
