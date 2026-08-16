@@ -162,6 +162,8 @@ body {
   font-weight: bold;
   cursor: pointer;
   font-family: "CuteGroovy", sans-serif;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .logo-first {
@@ -188,6 +190,8 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-family: "CuteGroovy", sans-serif;
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Ana Kapsül */
@@ -202,6 +206,8 @@ body {
   padding: 0px 8px; /* Yuvarlağın kapsüle değmemesi için iç boşluk */
   box-sizing: border-box;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Kayacak olan Yuvarlak */

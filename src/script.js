@@ -170,11 +170,15 @@ contactButton.addEventListener("click", () => {
     aboutButton.style.pointerEvents = "none"; // Disable the about button
     controls.enabled = false;
     const contactTimeline = gsap.timeline({
-        defaults: { ease: "back.inOut(1.8)", duration: 0.6 }
+        defaults: {
+            ease: "back.inOut(1.8)",
+            duration: 0.6
+        }
     });
 
     contactTimeline.to(contactSection, {
         translateY: "-50%",
+        duration: 1.0,
         onStart: () => {
             gsap.delayedCall(0.2, () => {
                 whooshSound.play().catch((error) => {
@@ -213,7 +217,10 @@ contactButton.addEventListener("click", () => {
 
 contactCloseButton.addEventListener("click", () => {
     const contactCloseTimeline = gsap.timeline({
-        defaults: { ease: "back.inOut(1.8)", duration: 0.6 },
+        defaults: {
+            ease: "back.inOut(1.8)",
+            duration: 0.6
+        },
         onComplete: () => {
             controls.enabled = true;
         }
@@ -235,6 +242,7 @@ contactCloseButton.addEventListener("click", () => {
         },
     }, "<").to(contactSection, {
         translateY: "-400%",
+        duration: 1.0,
         onStart: () => {
             gsap.delayedCall(0.2, () => {
                 whooshSound.play().catch((error) => {
@@ -425,18 +433,18 @@ const hologarphicMaterial = new THREE.ShaderMaterial({
 * Monitors Materials 
 */
 // //! First Monitor Video
-// const firstMonitorVideo = document.createElement("video");
-// firstMonitorVideo.src = "./textures/FirstMonitorVideo.mp4";
-// firstMonitorVideo.loop = true;
-// firstMonitorVideo.muted = true;
-// firstMonitorVideo.autoplay = true;
-// firstMonitorVideo.play();
+const firstMonitorVideo = document.createElement("video");
+firstMonitorVideo.src = "./Videos/FirstMonitorVideo.mp4";
+firstMonitorVideo.loop = true;
+firstMonitorVideo.muted = true;
+firstMonitorVideo.autoplay = true;
+firstMonitorVideo.play();
 
-// const firstVideoTexture = new THREE.VideoTexture(firstMonitorVideo);
-// firstVideoTexture.flipY = false;
-// firstVideoTexture.colorSpace = THREE.SRGBColorSpace;
+const firstVideoTexture = new THREE.VideoTexture(firstMonitorVideo);
+firstVideoTexture.flipY = false;
+firstVideoTexture.colorSpace = THREE.SRGBColorSpace;
 
-// const firstMonitorMaterial = new THREE.MeshBasicMaterial({ map: firstVideoTexture });
+const firstMonitorMaterial = new THREE.MeshBasicMaterial({ map: firstVideoTexture });
 
 //! Second Monitor Video
 const secondMonitorVideo = document.createElement("video");
@@ -453,12 +461,11 @@ const secondMonitorMaterial = new THREE.MeshBasicMaterial({ map: secondVideoText
 
 //? PC Glass Material
 const pcGlassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x111111,     // Koyu renkli temperli cam efekti için (istediğin gibi açabilirsin)
-    metalness: 0.8,      // Camın ortamı yansıtması için yüksek değer
-    roughness: 0.05,     // Pürüzsüz ve parlak bir yüzey için düşük değer
+    color: 0x111111,
+    metalness: 0.8,
+    roughness: 0.05,
     transparent: true,
-    opacity: 0.4,        // Işığı kırmak yerine saydamlaştırıyoruz (Sihir burada)
-    // transmission: 1,  <-- BU SATIRI TAMAMEN SİLİYORUZ
+    opacity: 0.4,
     side: THREE.FrontSide
 });
 
@@ -484,7 +491,7 @@ const playToggleAnimation = () => {
     const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "back.out(1.2)" } });
 
     if (isNight) {
-        tl.to(toggleHandle, { x: isMobile ? 70 : 68, backgroundColor: "#3b82f6" })
+        tl.to(toggleHandle, { x: 68, backgroundColor: "#3b82f6" })
             .to(themeToggleBtn, { backgroundColor: "#1e293b" }, "<")
             .to(iconSun, { opacity: 0, scale: 0.5, rotation: 90, duration: 0.3 }, "<")
             .to(iconMoon, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1");
@@ -575,8 +582,8 @@ const landingAnimation = () => {
         y: 1,
         z: 1
     }, "<").to(jettKnife[0].rotation, {
-        y: -Math.PI * 3,
-        ease: "power2.inOut",
+        y: -Math.PI * 1.5,
+        ease: "power3.inOut",
     }, "-=0.4").to(switchConsole[0].scale, {
         x: 1,
         y: 1,
@@ -619,14 +626,13 @@ const landingAnimation = () => {
     }, "-=0.45");
 }
 
-
 /**
  ** Load Model
  */
 gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
     gltf.scene.traverse((child) => {
         if (child.isMesh) {
-            const childName = child.name.toLowerCase(); // Convert the name to lowercase for case-insensitive comparison
+            const childName = child.name.toLowerCase();
 
             /*
             *Single Objects
@@ -639,7 +645,7 @@ gltfLoader.load("./models/BakeFileV5.glb", (gltf) => {
             //? Monitors
             else if (childName.includes("monitor")) {
                 if (childName === "mainmonitor") {
-                    // child.material = firstMonitorMaterial; 
+                    child.material = firstMonitorMaterial;
                 }
                 else {
                     child.material = secondMonitorMaterial;
@@ -1263,6 +1269,7 @@ manager.onLoad = () => {
                         keyboardKeyAnimation(keyboardKeys, true);
                         secondMonitorVideo.play();
                         landingAnimation();
+                        navigationLandingAnimation();
                         withoutEnterButton.remove();
                         enterButton.remove();
                         loadingText.remove();
@@ -1272,6 +1279,71 @@ manager.onLoad = () => {
             });
         }
     })
+};
+
+//? Navigation Landing Animation
+const navLogo = document.querySelector(".nav-Logo");
+const navigationLandingAnimation = () => {
+    const navLogoTexts = new SplitText(navLogo, { type: "chars" });
+    navLogoTexts.chars.forEach((char) => {
+        gsap.set(char, {
+            opacity: 0,
+            scale: 0,
+            y: -100,
+        });
+    });
+    gsap.set(navLogo, { autoAlpha: 1 });
+    gsap.set([aboutButton, contactButton, soundButton, themeToggleBtn], {
+        autoAlpha: 1,
+    });
+
+    const navigationLandingAnimationTimeLine = gsap.timeline({
+        defaults: {
+            ease: "back.out(1.8)",
+            duration: 0.5,
+        }
+    })
+    navigationLandingAnimationTimeLine.to(navLogoTexts.chars, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        stagger: {
+            each: 0.05,
+            from: "start"
+        }
+    }).fromTo(aboutButton, {
+        opacity: 0,
+        scale: 0,
+        y: -100
+    }, {
+        opacity: 1,
+        scale: 1,
+        y: 0
+    }, "-=0.3").fromTo(contactButton, {
+        opacity: 0,
+        scale: 0,
+        y: -100
+    }, {
+        opacity: 1,
+        scale: 1,
+        y: 0
+    }, "-=0.3").fromTo(soundButton, {
+        opacity: 0,
+        scale: 0,
+        y: -100
+    }, {
+        opacity: 1,
+        scale: 1,
+        y: 0
+    }, "-=0.3").fromTo(themeToggleBtn, {
+        opacity: 0,
+        scale: 0,
+        y: -100
+    }, {
+        opacity: 1,
+        scale: 1,
+        y: 0
+    }, "-=0.3");
 };
 
 //! Resize
