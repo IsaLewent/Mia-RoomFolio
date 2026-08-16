@@ -1,3 +1,7 @@
+//! Vercel Analytics
+import { inject } from '@vercel/analytics';
+inject();
+
 //! Import Three.js basics
 import * as THREE from "three";
 import { OrbitControls } from "./utils/OrbitControls.js";
