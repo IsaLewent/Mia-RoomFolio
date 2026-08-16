@@ -34,7 +34,6 @@ This project is not only a visual feast but also the product of a rigorous web p
 ### 1. 3D Modeling & Texturing (Blender)
 * All objects in the room (plushies, PC case, neon lights) were modeled as low-poly assets using Blender.
 * To maximize web performance, **Texture Baking** was utilized instead of calculating real-time lighting in the browser. Lights, shadows, and base colors were baked directly into the materials.
-* *Pro Detail:* For maximum realism and render quality, distinct materials such as coffee foam and mug elements were baked separately rather than being combined prematurely.
 
 ### 2. WebGL & Scene Setup (Three.js)
 * The baked GLTF/GLB models were integrated into the browser using **Three.js**.
@@ -48,7 +47,7 @@ This project is not only a visual feast but also the product of a rigorous web p
 * **SplitText Animations:** Contact section text is dynamically split and animated letter-by-letter with GSAP SplitText, creating a smooth, cascading stagger effect.
 
 ### 4. Audio Engineering
-* Interactive "hover" and "click" sound effects were added to strengthen the arcade menu immersion.
+* Interactive "hover" sound effects were added to strengthen the arcade menu immersion.
 * **Polyphony:** To ensure sounds do not interrupt each other when a user rapidly swipes over multiple buttons, a dynamic audio cloning architecture (`cloneNode`) was implemented. These audio instances are garbage-collected immediately after playback to prevent memory leaks.
 * The relaxing background music (Lofi BGM) is synchronized with a GSAP `delayedCall` to fade in gently 2 seconds after the scene loads, ensuring a smooth UX without startling the user.
 
