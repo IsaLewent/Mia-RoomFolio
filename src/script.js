@@ -1223,6 +1223,7 @@ manager.onLoad = () => {
                         secondMonitorVideo.play();
                         keyboardKeyAnimation(keyboardKeys, true);
                         landingAnimation();
+                        navigationLandingAnimation();
                         gsap.delayedCall(2.3, () => {
                             bgMusic.play().catch((error) => {
                                 console.error("Error playing background music:", error);
