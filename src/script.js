@@ -582,7 +582,7 @@ const landingAnimation = () => {
         y: 1,
         z: 1
     }, "<").to(jettKnife[0].rotation, {
-        y: -Math.PI * 1.5,
+        y: +Math.PI * 1.5,
         ease: "power3.inOut",
     }, "-=0.4").to(switchConsole[0].scale, {
         x: 1,
