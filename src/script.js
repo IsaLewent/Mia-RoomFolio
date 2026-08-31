@@ -495,7 +495,7 @@ const playToggleAnimation = () => {
     const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "back.out(1.2)" } });
 
     if (isNight) {
-        tl.to(toggleHandle, { x: 68, backgroundColor: "#3b82f6" })
+        tl.to(toggleHandle, { x: isMobile ? 74 : 68, backgroundColor: "#3b82f6" })
             .to(themeToggleBtn, { backgroundColor: "#1e293b" }, "<")
             .to(iconSun, { opacity: 0, scale: 0.5, rotation: 90, duration: 0.3 }, "<")
             .to(iconMoon, { opacity: 1, scale: 1, rotation: 0, duration: 0.4 }, "<0.1");
