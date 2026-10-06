@@ -28,7 +28,6 @@ import textures from "./utils/data.js";
 //! isMıbile 
 const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-
 /*
  * Sounds 
 */

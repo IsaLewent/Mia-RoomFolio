@@ -235,8 +235,11 @@ body {
   position: fixed;
   top: 50%; /* Navbar'ın hemen altında */
   left: 50%;
-  width: 60vw;
-  height: 75vh;
+  width: min(60vw, 920px);
+  max-width: calc(100vw - 32px);
+  height: min(75vh, 680px);
+  max-height: calc(100vh - 100px);
+  min-height: 0;
   background-color: #ff0fff; /* Yarı saydam arka plan */
   color: #fff;
   display: flex;
@@ -252,6 +255,8 @@ body {
 .aboutTop {
   width: 100%;
   height: 50%;
+  min-height: 0;
+  flex: 1 1 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -262,6 +267,7 @@ body {
 .aboutTopLeft {
   width: 40%;
   height: 100%;
+  min-height: 0;
   background-color: #ff0fff;
   display: flex;
   align-items: center;
@@ -291,6 +297,7 @@ body {
   background-color: #1a1525;
   width: 60%;
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -301,6 +308,14 @@ body {
   cursor: pointer;
   transition: box-shadow 0.2s ease;
   opacity: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.aboutTopRight::-webkit-scrollbar,
+.aboutBottomLeft::-webkit-scrollbar {
+  display: none;
 }
 
 .aboutTopRight:hover {
@@ -310,16 +325,17 @@ body {
 
 .aboutTopRightTop {
   width: 100%;
-  height: 100%;
+  height: auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  font-size: 16px;
+  font-size: clamp(12px, 1.2vw, 16px);
   font-family: "CuteGroovy", sans-serif;
 }
 
 .aboutTopHeader {
-  font-size: 18px;
-  height: 100%;
+  font-size: clamp(14px, 1.35vw, 18px);
+  height: auto;
   color: #fee715;
   font-family: "FredokaOne", sans-serif;
   text-transform: uppercase;
@@ -327,15 +343,16 @@ body {
 }
 
 .aboutTopText {
-  height: 100%;
-  font-size: 18px;
+  height: auto;
+  font-size: clamp(12px, 1.35vw, 18px);
+  line-height: 1.2;
   color: #f8f9fa;
   font-family: "Nunito", sans-serif;
   text-shadow: 2px 2px 0px rgba(45, 27, 78, 0.8);
 }
 
 .aboutBottomHeader {
-  font-size: 18px;
+  font-size: clamp(14px, 1.35vw, 18px);
   color: #fee715;
   font-family: "FredokaOne", sans-serif;
   text-transform: uppercase;
@@ -343,7 +360,8 @@ body {
 }
 
 .aboutBottomText {
-  font-size: 20px;
+  font-size: clamp(12px, 1.5vw, 20px);
+  line-height: 1.2;
   color: #f8f9fa;
   font-family: "Nunito", sans-serif;
   text-shadow: 2px 2px 0px rgba(45, 27, 78, 0.8);
@@ -351,17 +369,20 @@ body {
 
 .aboutTopRightBottom {
   width: 100%;
-  height: 100%;
+  height: auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 24px;
+  font-size: clamp(14px, 1.5vw, 24px);
   font-family: "CuteGroovy", sans-serif;
 }
 
 .aboutBottom {
   width: 100%;
   height: 50%;
+  min-height: 0;
+  flex: 1 1 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -374,6 +395,7 @@ body {
   background-color: #1a1525;
   width: 70%;
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -384,6 +406,9 @@ body {
   cursor: pointer;
   transition: box-shadow 0.2s ease;
   opacity: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .aboutBottomLeft:hover {
@@ -395,6 +420,7 @@ body {
   box-shadow: 6px 6px 0px #000000;
   width: 30%;
   height: 100%;
+  min-height: 0;
   display: flex;
   border-radius: 8px;
   cursor: pointer;
@@ -457,44 +483,53 @@ body {
   position: fixed;
   top: 50%; /* Navbar'ın hemen altında */
   left: 50%;
-  width: 30%;
-  height: 20%;
+  width: clamp(320px, 36vw, 560px);
+  min-width: 320px;
+  max-width: calc(100vw - 32px);
+  height: auto;
+  min-height: 0;
+  max-height: calc(100vh - 80px);
   background-color: #ff0fff; /* Yarı saydam arka plan */
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  padding: clamp(12px, 1.5vw, 20px);
   border-radius: 12px;
   transform: translate(-50%, -600%);
   z-index: 999;
-  gap: 20px;
+  gap: clamp(12px, 2vw, 24px);
   box-shadow: 4px 4px 0px rgba(45, 27, 78, 1);
   opacity: 1;
 }
 
 .contactTop {
-  font-size: 32px;
+  width: 100%;
+  font-size: clamp(20px, 2.2vw, 32px);
   letter-spacing: 2px;
+  line-height: 1.15;
+  text-align: center;
   font-family: "CuteGroovy", sans-serif;
   color: #fff;
   text-transform: uppercase;
 }
 
 .contactBottom {
+  width: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: clamp(10px, 1.5vw, 20px);
 }
 
 .githubLogo {
-  padding: 12px;
+  padding: clamp(6px, 0.8vw, 12px);
   border-radius: 8px;
-  width: 100px;
-  height: 100px;
+  width: clamp(64px, 7vw, 100px);
+  height: clamp(64px, 7vw, 100px);
   background-color: #1a1525;
   box-shadow: 6px 6px 0px #000000;
   transition: box-shadow 0.4s ease-in-out;
@@ -505,10 +540,10 @@ body {
 }
 
 .instagramLogo {
-  padding: 12px;
+  padding: clamp(6px, 0.8vw, 12px);
   border-radius: 8px;
-  width: 100px;
-  height: 100px;
+  width: clamp(64px, 7vw, 100px);
+  height: clamp(64px, 7vw, 100px);
   background-color: #1a1525;
   box-shadow: 6px 6px 0px #000000;
   transition: box-shadow 0.4s ease-in-out;
@@ -520,10 +555,10 @@ body {
 }
 
 .linkedinLogo {
-  padding: 12px;
+  padding: clamp(6px, 0.8vw, 12px);
   border-radius: 8px;
-  width: 100px;
-  height: 100px;
+  width: clamp(64px, 7vw, 100px);
+  height: clamp(64px, 7vw, 100px);
   background-color: #1a1525;
   box-shadow: 6px 6px 0px #000000;
   transition: box-shadow 0.4s ease-in-out;
@@ -535,10 +570,10 @@ body {
 }
 
 .twitterLogo {
-  padding: 12px;
+  padding: clamp(6px, 0.8vw, 12px);
   border-radius: 8px;
-  width: 100px;
-  height: 100px;
+  width: clamp(64px, 7vw, 100px);
+  height: clamp(64px, 7vw, 100px);
   background-color: #1a1525;
   box-shadow: 6px 6px 0px #000000;
   transition: box-shadow 0.4s ease-in-out;
@@ -550,23 +585,23 @@ body {
 }
 
 .githubLogo a img {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
 }
 
 .instagramLogo a img {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
 }
 
 .linkedinLogo a img {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
 }
 
 .twitterLogo a img {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
 }
 
 .contactCloseButton {
@@ -797,6 +832,49 @@ body {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+  .aboutSection {
+    width: calc(100vw - 32px);
+    height: min(82vh, 680px);
+    max-height: calc(100vh - 40px);
+    padding: 12px 12px 24px;
+    gap: 12px;
+  }
+
+  .aboutTop,
+  .aboutBottom {
+    gap: 12px;
+  }
+
+  .aboutTopLeft {
+    width: 35%;
+  }
+
+  .aboutTopRight {
+    width: 65%;
+    padding: 12px;
+  }
+
+  .aboutBottomLeft {
+    width: 75%;
+    padding: 12px 12px 0;
+    gap: 8px;
+  }
+
+  .aboutBottomRight {
+    width: 25%;
+  }
+
+  .aboutTopText,
+  .aboutBottomText {
+    font-size: clamp(11px, 1.4vw, 16px);
+    line-height: 1.15;
+  }
+
+  .aboutTopHeader,
+  .aboutBottomHeader {
+    font-size: clamp(12px, 1.4vw, 16px);
+  }
+
   .loadingPage {
     --webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
