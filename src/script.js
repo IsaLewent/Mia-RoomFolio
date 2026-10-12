@@ -331,6 +331,11 @@ const loaderTextures = {
 Object.entries(textures).forEach(([key, paths]) => {
     const morningTexture = textureLoader.load(paths.morning);
     const nightTexture = textureLoader.load(paths.night);
+    morningTexture.generateMipmaps = false;
+    morningTexture.minFilter = THREE.LinearFilter;
+
+    nightTexture.generateMipmaps = false;
+    nightTexture.minFilter = THREE.LinearFilter;
 
     morningTexture.flipY = false;
     nightTexture.flipY = false;
