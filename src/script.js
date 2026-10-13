@@ -5,9 +5,7 @@ inject();
 //! Import Three.js basics
 import * as THREE from "three";
 import { OrbitControls } from "./utils/OrbitControls.js";
-import GUI from "lil-gui";
 import gsap from "gsap";
-import useGSAP from "gsap";
 import { SplitText } from "gsap/SplitText";
 
 //! Import Stats.js
@@ -841,8 +839,8 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
 
 //? Clock
-const clock = new THREE.Clock();
-let prevTime = 0;
+const timer = new THREE.Timer();
+timer.connect(document);
 
 //? Hovered Object
 let currentHovered = null;
@@ -857,9 +855,8 @@ const tick = () => {
     stats.update();
 
     //? Time
-    const elapsedTime = clock.getElapsedTime();
-    const deltaTime = elapsedTime - prevTime
-    prevTime = elapsedTime
+    const elapsedTime = timer.getElapsed();
+    const deltaTime = timer.getDelta();
 
     //? Update Shader Uniforms
     hologarphicMaterial.uniforms.uTime.value = elapsedTime;
