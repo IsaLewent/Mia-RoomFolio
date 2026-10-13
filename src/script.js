@@ -850,6 +850,9 @@ const tick = () => {
     stats.update();
 
     //? Time
+    timer.update();
+    timer.getDelta();
+    timer.getElapsed();
     const elapsedTime = timer.getElapsed();
     const deltaTime = timer.getDelta();
 
